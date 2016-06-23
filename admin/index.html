@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="en" ng-app="SclApp">
+
+<head>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!-- Angular Material style sheet -->
+  <link rel="stylesheet" href="../app/css/ngMaterial/v1.1.0-rc.5/angular-material.min.css">
+  <!-- Custom Fonts -->
+  <!--<link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">-->
+
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=RobotoDraft:300,400,500,700,400italic">
+  <!-- Application CSS -->
+  <link rel="stylesheet" href="../app/css/styles.css">
+</head>
+
+<body ng-controller="MainCtrl as mainCtrl">
+  <!-- Application Content : Start -->
+  <div ng-cloak>
+    <md-toolbar flex class="md-hue-2">
+      <div class="md-toolbar-tools">
+        <h2>
+          <span>smartData Cultural League</span>
+        </h2>
+		<span flex></span>
+		<md-menu md-offset="0 -7" ng-if="isLoggedIn">
+			<md-button class="md-icon-button" aria-label="Settings" ng-click="$mdOpenMenu($event)">
+			  <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+			</md-button>
+			<md-menu-content width="2">
+            <md-menu-item>
+              <md-button ng-click="mainCtrl.logout()"> <span md-menu-align-target>Logout</span></md-button>
+            </md-menu-item>
+          </md-menu-content>
+		</md-menu>
+      </div>
+    </md-toolbar>
+
+    <div layout="column" class="md-padding">
+          <div ng-if="status" id="status">
+            <b layout="row" layout-align="center center" class="md-padding">
+              {{status}}
+            </b>
+          </div>
+    </div>
+
+    <div ui-view></div>
+
+<div layout-align="center center" flex="noshrink" layout="row">
+  <div id="license-footer" flex>
+    Powered by  <a class="md-default-theme md-accent" target="_blank" href="http://smartdatainc.net">smartData Inc.</a> &copy;2015&ndash;2016
+  </div>
+</div>
+  
+</div>
+  <!-- Application Content : End -->
+  
+  <!-- Angular Material requires Angular.js Libraries -->
+  <script src="../app/js/angularJs/1.5.5/angular.min.js"></script>
+  <script src="../app/js/angularJs/1.5.5/angular-animate.min.js"></script>
+  <script src="../app/js/angularJs/1.5.5/angular-aria.min.js"></script>
+  <!--<script src="../app/js/angularJs/1.5.5/angular-route.min.js"></script>-->
+  <!-- We are not using ui-router -->
+  <script src="../app/js/angularJs/v0.2.18/angular-ui-router.js"></script>
+  <script src="../app/js/angularJs/1.5.5/angular-messages.min.js"></script>
+  <script src="../app/js/angularJs/s.cdpn.io/t-114/svg-assets-cache.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/underscore.js/1.5.1/underscore-min.js"></script>
+  <!-- Angular Material Library -->
+  <script src="../app/js/angularJs/v1.1.0-rc.5/angular-material.min.js"></script>
+  
+  <!-- Application bootstrap  -->
+  <script src="js/admin.js"></script>
+  <script src="js/data.js"></script>
+  
+</body>
+</html>
+
+<!--
+Copyright 2016 Google Inc. All Rights Reserved. 
+Use of this source code is governed by an MIT-style license that can be in foundin the LICENSE file at http://material.angularjs.org/license.
+-->

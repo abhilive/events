@@ -1,0 +1,96 @@
+body {
+  width:100%;
+  padding:0;
+  margin:0;
+  box-sizing: border-box;
+}
+
+/*md-content.md-default-theme, md-content {
+  background-color: rgba(163, 160, 160, 0.45);
+}*/
+
+/*
+.carddemoBasicUsage .card-media {
+  background-color: #999999; }
+*/
+
+
+md-card > h2 {
+  padding-left : 15px;
+  
+}
+md-card >md-card-title>md-card-title-text {
+	color:#ffffff;
+}
+
+.participants .list {
+  border-left : 1px solid #DCDCDC;
+  border-right : 1px solid #DCDCDC;
+  border-bottom : 1px solid #DCDCDC;
+}
+
+.note {
+  width: 100%;
+  box-sizing:border-box;
+  background-color: rgba(204, 2, 5, 0.31);
+}
+
+p.good {
+  line-height: 30px;
+  padding-left: 10px;
+  margin: 10px;
+    box-sizing:border-box;  
+    background-color: rgba(0, 128, 0, 0.31);  
+}
+
+p.warn {
+
+  line-height: 30px;
+  padding-left: 10px;
+  margin: 10px;
+    box-sizing:border-box;  
+    background-color: rgba(204, 2, 5, 0.31);
+}
+
+/*For Tabs*/
+.tabsdemoDynamicTabs md-content {
+  background-color: transparent !important; }
+  .tabsdemoDynamicTabs md-content md-tabs {
+    border: 1px solid #e1e1e1; }
+    .tabsdemoDynamicTabs md-content md-tabs md-tab-content {
+      background: #f6f6f6; }
+    .tabsdemoDynamicTabs md-content md-tabs md-tabs-wrapper {
+      background: white; }
+  .tabsdemoDynamicTabs md-content h1:first-child {
+    margin-top: 0; }
+.tabsdemoDynamicTabs md-input-container {
+  padding-bottom: 0; }
+.tabsdemoDynamicTabs .remove-tab {
+  margin-bottom: 40px; }
+.tabsdemoDynamicTabs .demo-tab > div > div {
+  padding: 25px;
+  box-sizing: border-box; }
+.tabsdemoDynamicTabs .edit-form input {
+  width: 100%; }
+.tabsdemoDynamicTabs md-tabs {
+  border-bottom: 1px solid rgba(0, 0, 0, 0.12); }
+.tabsdemoDynamicTabs md-tab[disabled] {
+  opacity: 0.5; }
+.tabsdemoDynamicTabs label {
+  text-align: left; }
+.tabsdemoDynamicTabs .long > input {
+  width: 264px; }
+.tabsdemoDynamicTabs .md-button.add-tab {
+  transform: translateY(5px); }
+
+div#status {
+  color: #c60008; }
+
+#license-footer {
+    align-self: flex-end;
+    border-top: 1px solid #ddd;
+    font-size: small;
+    padding: 16px 32px;
+    text-align: center;
+    width: 100%;
+}

@@ -1,0 +1,42 @@
+<md-bottom-sheet class="md-list md-has-header" ng-cloak>
+  <md-content md-theme="docs-dark" layout-padding>
+      <div>
+        <form name="registerForm">
+          <div class="layout-gt-sm-row">
+            <md-input-container>
+              <label>Name</label>
+              <input ng-model="participant.name" required>
+            </md-input-container>
+            <md-input-container>
+              <label>Email</label>
+              <input ng-model="participant.email" type="email" required>
+            </md-input-container>
+            <md-input-container class="md-block" flex-gt-sm>
+                <label>Branch Location</label>
+                <md-select ng-model="participant.location" required>
+                  <md-option ng-repeat="loc in brloc" value="{{loc.id}}">
+                    {{loc.name}}
+                  </md-option>
+                </md-select>
+            </md-input-container>
+            <md-input-container class="md-block" flex-gt-sm>
+              <label>Select Activity</label>
+              <md-select ng-model="participant.activity" required>
+                <md-option ng-repeat="act in activities" value="{{act.id}}">
+                  {{act.name}}
+                </md-option>
+              </md-select>
+            </md-input-container>
+          </div>
+         <div class="dialog-demo-content" layout="row" layout-wrap layout-margin layout-align="center">
+            <md-button class="md-primary md-raised" ng-click="showConfirm($event)" ng-disabled="registerForm.$invalid">
+              Add This Entry
+            </md-button>
+          </div>
+          <p layout="row" layout-align="center center">
+            Note: Please use <b>&nbsp;comma separated&nbsp;</b> values under <b>&nbsp;name&nbsp;</b> for group performance.
+          </p>
+        </form>
+    </div>
+  </md-content>
+</md-bottom-sheet>

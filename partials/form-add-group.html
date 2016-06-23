@@ -1,0 +1,36 @@
+<md-bottom-sheet class="md-list md-has-header" ng-cloak>
+  <div layout-gt-sm="row" layout="column">
+    <div flex-gt-sm="50" flex>
+        <form name="registerForm">
+          <div layout="column">
+            <md-input-container>
+              <label>Performance Type</label>
+              <input ng-model="perf.type" required>
+            </md-input-container>
+          </div>
+         <div layout-align="center space-around">
+            <md-button class="md-primary md-raised" ng-click="showConfirm($event)" ng-disabled="registerForm.$invalid">
+              Add Performance
+            </md-button>
+          </div>
+        </form>
+    </div>
+	<div flex="5" flex></div>
+	<div flex-gt-sm="50" flex>
+	 <md-toolbar md-scroll-shrink>
+    <div class="md-toolbar-tools">Performances</div>
+  </md-toolbar>
+	<md-content style="height: 175px;">
+   </md-list layout-padding>
+		<md-list-item class="md-3-line" ng-repeat="act in activities">
+		  <div class="md-list-item-text" layout="column">
+            <p>{{ act.name }}</p>
+          </div>
+		  <md-button class="md-secondary" ng-click="deleteEntry($event,entry)">Delete</md-button>
+          <md-divider ng-if="!$last"></md-divider>
+		</md-list-item>
+	  </md-list>
+	  </md-content>
+	</div>
+  </div>
+</md-bottom-sheet>

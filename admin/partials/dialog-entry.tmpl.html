@@ -1,0 +1,57 @@
+<md-dialog aria-label="Register Yourself"  ng-cloak>
+  <form name="registerForm">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Register Yourself</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content">
+        <md-input-container class="md-icon-float md-block">
+          <!-- Use floating label instead of placeholder -->
+          <label>Name</label>
+          <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon>
+          <input ng-model="user.name"  md-maxlength="30" required md-no-asterisk  type="text">
+          <div ng-messages="registerForm.name.$error">
+            <div ng-message="required">This is required.</div>
+            <div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>
+          </div>
+        </md-input-container>
+        <md-input-container md-no-float class="md-block">
+          <md-icon md-svg-src="img/icons/ic_phone_24px.svg"></md-icon>
+          <input ng-model="user.phone" type="text" placeholder="Phone Number">
+        </md-input-container>
+        <md-input-container class="md-block">
+          <!-- Use floating placeholder instead of label -->
+          <md-icon md-svg-src="img/icons/ic_email_24px.svg" class="email"></md-icon>
+          <input ng-model="user.email" type="email" placeholder="Email (required)" ng-required="true">
+        </md-input-container>
+        <md-input-container md-no-float class="md-block">
+          <label>Branch Location</label>
+          <md-select ng-model="user.state">
+            <md-option ng-repeat="loc in brloc" value="{{loc.id}}">
+              {{loc.name}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <!--<md-button href="http://en.wikipedia.org/wiki/Mango" target="_blank" md-autofocus>
+        More on Wikipedia
+      </md-button>-->
+      
+      <md-button class="md-raised md-primary" ng-click="answer('not useful')" md-autofocus>
+        Confirm
+      </md-button>
+      <span flex></span>
+      <md-button class="md-primary" ng-click="answer('useful')">
+        Cancel
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>
