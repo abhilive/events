@@ -23,30 +23,20 @@
           <span>smartData Cultural League</span>
         </h2>
         <span flex></span>
-        <h3>
-          <md-button aria-label="" class="md-raised"
-                     ng-click="register()">
-            <md-tooltip md-visible="tooltipVisible" md-autohide="false">
-              Mark Your Entry
-            </md-tooltip>
-            Mark Your Entry
+        <div>
+          <md-button aria-label="label" class="md-icon-button" ng-click="register()">
+            <md-icon md-svg-src="img/icons/ic_phone_24px.svg"></md-icon>
+            <md-tooltip>Wildcard Entry</md-tooltip>
           </md-button>
-          <md-button aria-label="" class="md-fab md-raised md-mini"
-                     ng-click="">
-            <md-tooltip md-visible="tooltipVisible" md-autohide="false">
-              Notification
-            </md-tooltip>
-            <md-icon md-svg-icon="alarm" aria-label="Alarm Icon"></md-icon>
+          <md-button aria-label="label" class="md-icon-button">
+            <md-icon md-svg-src="img/icons/ic_email_24px.svg" class="email"></md-icon>
+            <md-tooltip>Notification</md-tooltip>
           </md-button>
-          <md-button aria-label="" class="md-raised"
-                     ng-click="openAdmin()">
-            <md-tooltip md-visible="tooltipVisible"
-                        md-autohide="false">
-              Admin
-            </md-tooltip>
-            Admin
+          <md-button aria-label="label" class="md-icon-button" ng-click="openAdmin()">
+            <md-icon md-svg-src="img/icons/ic_person_24px.svg"></md-icon>
+            <md-tooltip>Admin Login</md-tooltip>
           </md-button>
-        </h3>
+        </div>
       </div>
     </md-toolbar>
     </md-content>

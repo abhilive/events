@@ -31,38 +31,34 @@ app.factory("Data", ['$http', '$location',
 /**
  * Factory Method For Login Authentication
  */
-app.factory("authenticationSvc", ["$http","$q","$window",function ($http, $q, $window) {
+app.factory("authenticationSvc", ["$http","$q","$window", "Data",function ($http, $q, $window, Data) {
     var userInfo;
 
     function login(userName, password) {
         var deferred = $q.defer();
 
-        $http.post("bin/login.php", { username: userName, password: password })
-            .then(function (result) {
+        Data.post("login", { username: userName, password: password })
+            .then(function(result){
                 console.log(result);
-                userInfo = {
-                    accessToken: result.data.access_token,
-                    userName: result.data.userName
-                };
+                if(result.status==='success') {
+                    userInfo = {
+                        accessToken: result.data.access_token,
+                        userName: result.data.userName
+                    };
                 $window.sessionStorage["userInfo"] = JSON.stringify(userInfo);
-                deferred.resolve(userInfo);
-            }, function (error) {
+                }
+                
+                deferred.resolve(result);      
+        }, function (error) {
                 deferred.reject(error);
-            });
-
+        });
         return deferred.promise;
     }
 
     function logout() {
         var deferred = $q.defer();
-
-        $http({
-            method: "POST",
-            url: "bin/logout.php",
-            headers: {
-                "access_token": userInfo.accessToken
-            }
-        }).then(function (result) {
+		console.log('sdfsdf');
+        Data.post("logout").then(function (result) {
             userInfo = null;
             $window.sessionStorage["userInfo"] = null;
             deferred.resolve(result);
@@ -77,6 +73,14 @@ app.factory("authenticationSvc", ["$http","$q","$window",function ($http, $q, $w
         return userInfo;
     }
 
+    function isAuthenticated() {
+        if(userInfo) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
     function init() {
         if ($window.sessionStorage["userInfo"]) {
             userInfo = JSON.parse($window.sessionStorage["userInfo"]);
@@ -87,7 +91,7 @@ app.factory("authenticationSvc", ["$http","$q","$window",function ($http, $q, $w
     return {
         login: login,
         logout: logout,
-        getUserInfo: getUserInfo
+        getUserInfo: getUserInfo,
+        isAuthenticated: isAuthenticated
     };
 }]);
-/*Service for alert directive*/

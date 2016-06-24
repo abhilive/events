@@ -1,0 +1,36 @@
+<md-dialog aria-label="Management Login" ng-controller="LoginCtrl as loginCtrl">
+  <form name="loginForm" ng-submit="loginCtrl.submit(username, password)">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Management Login</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="loginCtrl.cancel()">
+          <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content">
+
+        <md-input-container md-no-float>
+          <label>Username</label>
+          <md-icon md-svg-src="img/icons/ic_person_24px.svg"></md-icon>
+          <input ng-model="username" type="text" required md-no-asterisk >
+        </md-input-container>
+
+        <md-input-container md-no-float>
+          <label>Password</label>
+          <md-icon md-svg-src="img/icons/ic_key_24px.svg"></md-icon>
+          <input ng-model="password" type="text" required md-no-asterisk>
+        </md-input-container>
+
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <span flex></span>
+      <md-button class="md-raised md-primary" type="submit" md-autofocus>
+        Confirm
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>
