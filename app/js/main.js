@@ -61,7 +61,7 @@ app.config(function($stateProvider, $urlRouterProvider) {
   
   $stateProvider
     .state('index', {
-      url: "",
+      url: "/home",
       templateUrl: "partials/dashboard.html",
 	  data: {
         requireLogin: false
@@ -105,11 +105,6 @@ app.service('loginModal', function ($mdDialog, $rootScope) {
   }
 
   return function(ev) {
-    /*var instance = $mdDialog.open({
-      templateUrl: 'views/loginModalTemplate.html',
-      controller: 'LoginModalCtrl',
-      controllerAs: 'LoginModalCtrl'
-    })*/
 
       var instance = $mdDialog.show({
         controller: DialogController,
@@ -251,7 +246,7 @@ app.controller('ListCtrl', function($scope, $mdDialog, Data) {
     // Retrieve all Performers
     Data.get('participants').then(function(data){
         $scope.participants = data.data;
-  });
+    });
 
     $scope.doSecondaryAction = function(event) {
         $mdDialog.show(
@@ -263,5 +258,7 @@ app.controller('ListCtrl', function($scope, $mdDialog, Data) {
             .targetEvent(event)
         );
     };
+
+    //$scope.goToPerson
 
 });

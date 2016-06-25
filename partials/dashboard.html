@@ -100,11 +100,15 @@
           <div class="participants demo-tab tab{{$index%4}}">
               <md-list class="list" flex>
                 <md-subheader class="md-no-sticky md-warn">{{tab.total_participants}} Selected Entries (Max:20, Closing Date: 24-June-16) </md-subheader>
-                <md-list-item class="md-3-line" ng-repeat="person in tab.participants">
+                <md-list-item class="md-3-line" ng-repeat="person in tab.participants" ng-click="goToPerson(person.id, $event)" class="noright">
                   <div class="md-list-item-text" layout="column">
                     <h3>{{ person.name }}</h3>
                     <p>{{ person.location }}</p>
                   </div>
+                 
+                  <md-button ui-sref="viewpics/{{person.id}}" class="md-raised md-secondary">View Photos</button>
+                  
+                  <!--<md-icon md-svg-icon="social:cake" style="color: #f00;" aria-label="Cake Icon"></md-icon>-->
                   <md-icon md-svg-icon="communication:email" ng-click="doSecondaryAction($event)" aria-label="Send Email" class="md-secondary md-hue-3" ></md-icon>
                   <md-icon class="md-secondary" ng-click="doSecondaryAction($event)" aria-label="Chat" md-svg-icon="communication:message"></md-icon>
                   <md-button class="md-raised md-secondary" ng-click="doSecondaryAction($event)">More Info</md-button>
