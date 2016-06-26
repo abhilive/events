@@ -106,8 +106,8 @@
                     <p>{{ person.location }}</p>
                   </div>
                  
-                  <md-button ui-sref="viewpics/{{person.id}}" class="md-raised md-secondary">View Photos</button>
-                  
+                  <md-button ui-sref="viewpics({participantId: person.id})" class="md-raised md-secondary">View Photos</md-button>
+                  <!--<a ui-sref="partyDetail({ partyID: id, partyLocation: location })">See the Party</a>-->
                   <!--<md-icon md-svg-icon="social:cake" style="color: #f00;" aria-label="Cake Icon"></md-icon>-->
                   <md-icon md-svg-icon="communication:email" ng-click="doSecondaryAction($event)" aria-label="Send Email" class="md-secondary md-hue-3" ></md-icon>
                   <md-icon class="md-secondary" ng-click="doSecondaryAction($event)" aria-label="Chat" md-svg-icon="communication:message"></md-icon>

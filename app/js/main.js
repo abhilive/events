@@ -47,7 +47,7 @@ app.run(function ($rootScope, $state, loginModal, authenticationSvc) {
           })
           .catch(function () {
             console.log('2');
-            return $state.go('dashboard');
+            return $state.go('index');
           });
     }
   });
@@ -61,19 +61,24 @@ app.config(function($stateProvider, $urlRouterProvider) {
   
   $stateProvider
     .state('index', {
-      url: "/home",
+      url: "",
       templateUrl: "partials/dashboard.html",
 	  data: {
         requireLogin: false
       }
     })
-    .state('dashboard', {
-      url: "/dashboard",
-      templateUrl: "partials/dashboard.html",
-      data: {
-          requireLogin: false
-        }
-      })
+	.state('viewpics', {
+        url: '/viewpics/:participantId',
+		templateUrl: "partials/participants/viewpics.html",
+		controller: function($scope, $stateParams) {
+            // get the id
+            $scope.partId = $stateParams.participantId;
+			console.log($scope.partId);
+        },
+		data: {
+			requireLogin: false
+		}
+    })
     .state('404', {
       url: "/404",
       templateUrl: "partials/404.html",
