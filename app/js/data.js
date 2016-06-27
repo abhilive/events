@@ -57,7 +57,6 @@ app.factory("authenticationSvc", ["$http","$q","$window", "Data",function ($http
 
     function logout() {
         var deferred = $q.defer();
-		console.log('sdfsdf');
         Data.post("logout").then(function (result) {
             userInfo = null;
             $window.sessionStorage["userInfo"] = null;

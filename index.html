@@ -1,7 +1,14 @@
-<!doctype html>
-<html lang="en" ng-app="SclApp">
+<!DOCTYPE html>
+<html class="no-js" lang="en" ng-app="SclApp">
 
 <head>
+
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+
+  <meta name="author" content="">
+
+  <title ng-bind="title"></title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <!-- Angular Material style sheet -->
   <link rel="stylesheet" href="app/css/ngMaterial/v1.1.0-rc.5/angular-material.min.css">
@@ -28,8 +35,8 @@
             <md-icon md-svg-src="img/icons/ic_phone_24px.svg"></md-icon>
             <md-tooltip>Wildcard Entry</md-tooltip>
           </md-button>
-          <md-button aria-label="label" class="md-icon-button">
-            <md-icon md-svg-icon="alarm" style="color: #0F0;" aria-label="Alarm Icon"></md-icon>
+          <md-button ng-click="goToState('notification');" aria-label="label" class="md-icon-button">
+            <md-icon md-svg-icon="social:notifications-on" style="color: #0F0;" aria-label="Alarm Icon"></md-icon>
             <md-tooltip>Notification</md-tooltip>
           </md-button>
           <md-button aria-label="label" class="md-icon-button" ng-click="openAdmin()">
@@ -41,15 +48,16 @@
     </md-toolbar>
     </md-content>
 	<!-- For status messages -->
-    <div layout="column" class="md-padding">
-          <div ng-if="status" id="status">
+    <div ng-if="status" layout="column" class="md-padding">
+          <div id="status">
             <b layout="row" layout-align="center center" class="md-padding">
               {{status}}
             </b>
           </div>
     </div>
-
+  <!-- For Content :Start -->
 	<div ui-view></div>
+  <!-- For Content :End -->
 	
 <!-- footer Start -->
 <div layout-align="center center" flex="noshrink" layout="row">

@@ -1,8 +1,8 @@
-<div ng-controller="DashboardCtrl as dashboardCtrl">
+<div ng-controller="DashboardCtrl as dashboardCtrl" ng-init="showEntries();">
   <md-content class="md-padding">
     <section layout="row" layout-sm="column" layout-align="center center" layout-wrap>
-      <md-button class="md-raised md-warn">Show Finalist</md-button>
-      <md-button class="md-raised md-primary" ng-click="openBoxForGroup()">Add Group</md-button>
+      <md-button class="md-raised md-warn" ng-click="showEntries();">Show Finalist</md-button>
+      <!--<md-button class="md-raised md-primary" ng-click="openBoxForGroup()">Add Group</md-button>-->
       <md-button class="md-raised md-primary" ng-click="openBoxForEntry()">Add Entry</md-button>
     </section>
   </md-content>
@@ -25,7 +25,7 @@
             <h4>{{ entry.group_name }}</h4>
             <p>{{ entry.location }}</p>
           </div>
-		  <md-button class="md-secondary md-raised md-warn md-hue-2" ng-click="deleteEntry($event,entry)">Delete</md-button>
+		      <md-button class="md-secondary md-raised md-warn md-hue-2" ng-click="deleteEntry($event,entry)">Delete</md-button>
           <!--<md-checkbox class="md-secondary" ng-model="person.selected"></md-checkbox>
           <md-icon md-svg-icon="communication:email" ng-click="doSecondaryAction($event)" aria-label="Send Email" class="md-secondary md-hue-3" ></md-icon>
           <md-icon class="md-secondary" ng-click="doSecondaryAction($event)" aria-label="Chat" md-svg-icon="communication:message"></md-icon>-->
@@ -34,4 +34,5 @@
       </md-list>
       </div>
   </md-content>
+
 </div>
