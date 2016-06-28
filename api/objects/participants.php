@@ -7,10 +7,11 @@
 		private $participants_table_name = "participants";
 		private $group_table_name = "group_type";
 		private $location_table_name = "location";
+		private $status_table_name = "statuses";
 		// object properties 
 
 		private $_order = array();
-		private $_status = true;
+		private $_status = 0;
 		private $_message = 'Information has been saved successfully.';
 
 		// constructor with $db as database connection 
@@ -55,14 +56,16 @@
 	        }
 	        return $response;
 		}
-
+		//For Admin Select to show records
 		function readAll() {
 			try{
 		    // select all query
-	            $query = "SELECT scl_pr.id AS id, scl_pr.name AS participant_name, scl_gr.name AS group_name, scl_lc.name AS location \n"
+	            $query = "SELECT scl_pr.id AS id, scl_pr.name AS participant_name, scl_gr.name AS group_name, scl_lc.name AS location, scl_st.title AS status \n"
 				    . "FROM ".$this->participants_table_name." AS scl_pr \n"
 				    . "JOIN ".$this->group_table_name." AS scl_gr ON scl_pr.group_id = scl_gr.id \n"
-				    . "JOIN ".$this->location_table_name." AS scl_lc ON scl_pr.location_id = scl_lc.id GROUP BY scl_pr.id ORDER BY id DESC\n"
+				    . "JOIN ".$this->location_table_name." AS scl_lc ON scl_pr.location_id = scl_lc.id \n"
+				    . "JOIN ".$this->status_table_name." AS scl_st ON scl_pr.status_id = scl_st.id \n"
+				    . "GROUP BY scl_pr.id ORDER BY id DESC\n"
 				    . "";
 				    //echo $query;die;
 	            $stmt = $this->conn->prepare( $query );
@@ -87,17 +90,27 @@
 	        return $response;
 		}
 
-		// read All Group & participants
+		// read All Group & Participants
 		function readAllGroups() {
 			try{
 		    $response = '';
-    		$json_params = $this->generateJson(array('id'=>'scl_pr.id','name'=>'scl_pr.name','location'=>'scl_lc.name'),'participants');
+    		$json_params = $this->generateJson(array('id'=>'scl_pr.id','nm'=>'scl_pr.name','lc'=>'scl_lc.name','st'=>'scl_st.id'),'participants');
 		    
 		    $query = "SELECT scl_gr.id, scl_gr.name, COUNT(scl_pr.id) as total_participants, ".$json_params." \n"
 		    		. "FROM ".$this->group_table_name." AS scl_gr \n"
 				    . "JOIN ".$this->participants_table_name." AS scl_pr ON scl_gr.id = scl_pr.group_id \n"
-				    . "JOIN ".$this->location_table_name." AS scl_lc ON scl_pr.location_id = scl_lc.id GROUP BY scl_gr.id ORDER BY name ASC\n"
+				    . "JOIN ".$this->location_table_name." AS scl_lc ON scl_pr.location_id = scl_lc.id \n"
+				    . "JOIN ".$this->status_table_name." AS scl_st ON scl_pr.status_id = scl_st.id \n"
+				    . "GROUP BY scl_gr.id ORDER BY name ASC\n"
 				    . "";
+
+			/*$query = "SELECT scl_gr.id, scl_gr.name, COUNT(scl_pr.id) as total_participants, ".$json_params." \n"
+		    		. "FROM ".$this->group_table_name." AS scl_gr, participants as scl_pr, location as scl_lc, statuses as scl_st \n"
+				    . "WHERE scl_gr.id = scl_pr.group_id \n"
+				    . "AND scl_lc ON scl_pr.location_id = scl_lc.id \n"
+				    . "AND scl_st ON scl_pr.status_id = scl_st.id \n"
+				    . "GROUP BY scl_gr.id ORDER BY name ASC\n"
+				    . "";*/
 			//echo $query;die;
 		    // prepare query statement
 		    $stmt = $this->conn->prepare( $query );
@@ -118,7 +131,7 @@
 			        $result[] = array(
 			        		'id' => $_row['id'],
 			        		'name' => $_row['name'],
-			        		'total_participants' => $_row['total_participants'],
+			        		'ttl_pr' => $_row['total_participants'],
 			        		'participants' => json_decode($_row['participants']) // decode json data getting for items
 			        	); 
 			    	} //End Foreach
