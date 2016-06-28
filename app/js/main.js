@@ -55,12 +55,14 @@ app.run(function ($rootScope, $state, loginModal, authenticationSvc) {
 
 app.config(function($stateProvider, $urlRouterProvider) {
 
-	// For any unmatched url, redirect to /state1
+	// the known route, with missing '/' - let's create alias
+$urlRouterProvider.when('', '/');
+  // For any unmatched url, redirect to /state1
   $urlRouterProvider.otherwise("/404");
   
   $stateProvider
     .state('index', {
-      url: "",
+      url: "/",
       templateUrl: "partials/dashboard.html",
 	    data: {
         requireLogin: false,
@@ -103,14 +105,14 @@ app.config(function($stateProvider, $urlRouterProvider) {
       }
     })
 	.state('admin.login', {
-      url: '/login',
+		url: '/login',
 	    templateUrl: "partials/login.html",
     })
 	.state('admin.dashboard', {
-      url: '/admin/dashboard',
-	    templateUrl: "partials/admin/admin.dashboard.html",
-      data: {
-          title: 'smartData Cultural League | Admin Dashboard'
+		url: '/admin/dashboard',
+		templateUrl: "partials/admin/admin.dashboard.html",
+		data: {
+			title: 'smartData Cultural League | Admin Dashboard'
         },
     })
 });
@@ -221,6 +223,17 @@ app.controller('AppCtrl', function($scope, $rootScope, $state, $mdDialog, $windo
         $scope.participants = data.data;
       });
   }
+  
+  $scope.logout = function() {
+  console.log('test=lout');
+	authenticationSvc.logout()
+		.then(function (result) {
+			//$location.path("/");
+			$state.go('index');
+		}, function (error) {
+			console.log(error);
+		});
+	};
 
 }); // End Controller - AppCtrl
 

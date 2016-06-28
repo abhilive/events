@@ -8,9 +8,16 @@
             <md-icon md-svg-icon="img/icons/dashboard.svg"></md-icon>
           </md-button>-->
           <span flex></span>
-          <md-button class="md-icon-button" aria-label="More" ng-click="logout();">
-            <md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
-          </md-button>
+			<md-menu>
+				<md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
+					<md-icon md-svg-icon="img/icons/menu.svg"></md-icon>
+				</md-button>
+				<md-menu-content width="2">
+				<md-menu-item>
+					<md-button ng-click="logout();">Logout</md-button>
+				</md-menu-item>
+			  </md-menu-content>
+			</md-menu>
         </div>
       </div>
     </md-toolbar>
