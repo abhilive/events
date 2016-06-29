@@ -1,12 +1,13 @@
    <md-content layout="column">
     <md-toolbar>
       <div class="md-toolbar-tools">
-        <div></div>
+        <div>
+			<md-button ng-click="goToState('admin.dashboard');" class="md-icon-button" aria-label="Dashboard">
+				<md-icon md-svg-icon="img/icons/ic_dashboard_24px.svg"></md-icon>
+			</md-button>
+		</div>
         <span flex></span>
         <div>
-          <!--<md-button class="md-icon-button" aria-label="Settings">
-            <md-icon md-svg-icon="img/icons/dashboard.svg"></md-icon>
-          </md-button>-->
           <span flex></span>
 			<md-menu>
 				<md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">

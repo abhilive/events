@@ -53,6 +53,13 @@ app.run(function ($rootScope, $state, loginModal, authenticationSvc) {
 
 });
 
+app.filter('person', function($filter) {
+  return function(input) {
+	console.log(input);
+    //return input ? '\u2713' : '\u2718';
+  };
+});
+
 app.config(function($stateProvider, $urlRouterProvider) {
 
 	// the known route, with missing '/' - let's create alias
@@ -69,8 +76,8 @@ $urlRouterProvider.when('', '/');
         title: 'smartData Cultural League'
       }
     })
-    .state('notification', {
-      url: '/notification',
+    .state('notifications', {
+      url: '/notifications',
       templateUrl: "partials/notifications.html",
       data: {
        requireLogin: false,

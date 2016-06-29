@@ -31,14 +31,26 @@
         </h2>
         <span flex></span>
         <div>
-          <md-button aria-label="label" class="md-icon-button" ng-click="openBoxForUserEntry()">
-            <md-icon md-svg-src="img/icons/ic_phone_24px.svg"></md-icon>
-            <md-tooltip>Wildcard Entry</md-tooltip>
-          </md-button>
-          <md-button ng-click="goToState('notification');" aria-label="label" class="md-icon-button">
-            <md-icon md-svg-icon="social:notifications-on" style="color: #0F0;" aria-label="Alarm Icon"></md-icon>
-            <md-tooltip>Notification</md-tooltip>
-          </md-button>
+			<md-button ng-click="goToState('index');" class="md-icon-button" aria-label="Dashboard">
+				<md-icon md-svg-icon="img/icons/ic_dashboard_24px.svg"></md-icon>
+				<md-tooltip>Dashboard</md-tooltip>
+			</md-button>
+				<md-button aria-label="label" class="md-icon-button" ng-click="openBoxForUserEntry()">
+					<md-icon md-svg-src="img/icons/ic_whatshot_24px.svg"></md-icon>
+					<md-tooltip>Whats Hot</md-tooltip>
+				</md-button>
+			  <md-button aria-label="label" class="md-icon-button" ng-click="openBoxForUserEntry()">
+				<md-icon md-svg-src="img/icons/ic_fiber_new_24px.svg"></md-icon>
+				<md-tooltip>Wildcard Entry</md-tooltip>
+			  </md-button>
+			  <md-button ng-click="goToState('notifications');" aria-label="label" class="md-icon-button">
+				<md-icon md-svg-icon="social:notifications-on" style="color: #0F0;" aria-label="Alarm Icon"></md-icon>
+				<md-tooltip>Notifications</md-tooltip>
+			  </md-button>
+			<md-button ng-click="goToState('place');" class="md-icon-button" aria-label="Place">
+				<md-icon md-svg-icon="img/icons/ic_place_24px.svg"></md-icon>
+				<md-tooltip>Event Location</md-tooltip>
+			</md-button>
           <md-button aria-label="label" class="md-icon-button" ng-click="openAdmin()">
             <md-icon md-svg-src="img/icons/ic_lock_24px.svg"></md-icon>
             <md-tooltip>Admin Login</md-tooltip>
