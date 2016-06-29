@@ -35,10 +35,10 @@
 				<md-icon md-svg-icon="img/icons/ic_dashboard_24px.svg"></md-icon>
 				<md-tooltip>Dashboard</md-tooltip>
 			</md-button>
-				<md-button aria-label="label" class="md-icon-button" ng-click="openBoxForUserEntry()">
-					<md-icon md-svg-src="img/icons/ic_whatshot_24px.svg"></md-icon>
-					<md-tooltip>Whats Hot</md-tooltip>
-				</md-button>
+			<md-button ng-click="goToState('showwhatshot');" aria-label="Whats Hot" class="md-icon-button">
+				<md-icon md-svg-src="img/icons/ic_whatshot_24px.svg"></md-icon>
+				<md-tooltip>Whats Hot</md-tooltip>
+			</md-button>
 			  <md-button aria-label="label" class="md-icon-button" ng-click="openBoxForUserEntry()">
 				<md-icon md-svg-src="img/icons/ic_fiber_new_24px.svg"></md-icon>
 				<md-tooltip>Wildcard Entry</md-tooltip>
@@ -82,9 +82,13 @@
   <!-- Application Content : End -->
   
   <!-- Angular Material requires Angular.js Libraries -->
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="app/js/angularJs/1.5.5/angular.min.js"></script>
   <script src="app/js/angularJs/1.5.5/angular-animate.min.js"></script>
   <script src="app/js/angularJs/1.5.5/angular-aria.min.js"></script>
+<link rel="stylesheet" href="//cdn.jsdelivr.net/flexslider/2.2.2/flexslider.css">
+  <script src="//cdn.jsdelivr.net/flexslider/2.2.2/jquery.flexslider-min.js"></script>
+  
 <!--<script src="../app/js/angularJs/1.5.5/angular-route.min.js"></script>-->
   <!-- We are not using ui-router -->
   <script src="app/js/angularJs/v0.2.18/angular-ui-router.js"></script>
@@ -97,7 +101,7 @@
   <!-- Application bootstrap  -->
   <script src="app/js/main.js"></script>
   <script src="app/js/data.js"></script>
-  
+    <script src="app/js/angular-flexslider.js"></script>
 </body>
 </html>
 
