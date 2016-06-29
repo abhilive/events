@@ -99,23 +99,22 @@
           <div class="participants demo-tab tab{{$index%4}}">
               <md-list class="list" flex>
                 <md-subheader class="md-no-sticky md-warn">{{tab.ttl_pr}} Selected Entries (Max:20, Closing Date: 24-June-16) </md-subheader>
-                <md-list-item class="md-3-line" ng-repeat="person in tab.participants" ng-click="goToPerson(person.id, $event)" class="noright">
+                <md-list-item class="md-3-line" ng-repeat="person in tab.prts" ng-click="goToPerson(person.id, $event)" class="noright">
                   <div class="md-list-item-text" layout="column">
                     <h3>{{ person.nm }}</h3>
                     <p>{{ person.lc }}</p>
                   </div>
-				  <div>
-					<span class="md-hue-2" ng-bind="{{ person.st | person}}"></span>
+				  <div layout="column" style="color:red;">{{ person.st }}</div>
+          <div>
+    					<!--<md-button class="md-fab md-mini" aria-label="Eat cake">
+    						<md-icon md-svg-src="img/icons/cake.svg"></md-icon>
+    					</md-button>-->
+    					<md-button class="md-fab md-mini md-primary" aria-label="Contacts">
+    					  <md-icon md-svg-src="img/icons/ic_contacts_24px.svg" style="color: greenyellow;"></md-icon>
+                <md-tooltip>Contacts</md-tooltip>
+    					</md-button>
 				  </div>
-                  <div>
-					<md-button class="md-fab md-mini" aria-label="Eat cake">
-						<md-icon md-svg-src="img/icons/cake.svg"></md-icon>
-					</md-button>
-					<md-button class="md-fab md-mini md-primary" aria-label="Use Android">
-					  <md-icon md-svg-src="img/icons/ic_contacts_24px.svg" style="color: greenyellow;"></md-icon>
-					</md-button>
-				  </div>
-                  <md-button ui-sref="viewpics({participantId: person.id})" class="md-raised md-secondary">View Photos</md-button>
+                  <!--<md-button ui-sref="viewpics({participantId: person.id})" class="md-raised md-secondary">View Photos</md-button>-->
                   <!--<md-icon md-svg-icon="communication:email" ng-click="doSecondaryAction($event)" aria-label="Send Email" class="md-secondary md-hue-3" ></md-icon>
                   <md-icon class="md-secondary" ng-click="doSecondaryAction($event)" aria-label="Chat" md-svg-icon="communication:message"></md-icon>
                   <md-button class="md-raised md-secondary" ng-click="doSecondaryAction($event)">More Info</md-button>-->

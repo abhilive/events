@@ -94,9 +94,17 @@
 		function readAllGroups() {
 			try{
 		    $response = '';
-    		$json_params = $this->generateJson(array('id'=>'scl_pr.id','nm'=>'scl_pr.name','lc'=>'scl_lc.name','st'=>'scl_st.id'),'prts');
+    		$json_params = $this->generateJson(array('id'=>'scl_pr.id','nm'=>'scl_pr.name','lc'=>'scl_lc.name','st'=>'scl_st.title'),'prts');
 		    
-		    $query = "SELECT scl_gr.id, scl_gr.name, COUNT(scl_pr.id) as ttl_pr, ".$json_params." \n"
+		    // Ref Link : http://pentahointegra.blogspot.in/2013/01/how-to-increase-groupconcat-function.html
+		    // Code to set max length for group concat
+		    $query_to_set = "SET SESSION group_concat_max_len = 1000000;";
+		    $stmt = $this->conn->prepare( $query_to_set );
+		     
+		    // execute query
+		    $stmt->execute();
+
+		    $query .= "SELECT scl_gr.id, scl_gr.name, COUNT(scl_pr.id) as ttl_pr, ".$json_params." \n"
 		    		. "FROM ".$this->group_table_name." AS scl_gr \n"
 				    . "JOIN ".$this->participants_table_name." AS scl_pr ON scl_gr.id = scl_pr.group_id \n"
 				    . "JOIN ".$this->location_table_name." AS scl_lc ON scl_pr.location_id = scl_lc.id \n"
@@ -104,14 +112,6 @@
 				    . "GROUP BY scl_gr.id ORDER BY name ASC\n"
 				    . "";
 
-			/*$query = "SELECT scl_gr.id, scl_gr.name, COUNT(scl_pr.id) as total_participants, ".$json_params." \n"
-		    		. "FROM ".$this->group_table_name." AS scl_gr, participants as scl_pr, location as scl_lc, statuses as scl_st \n"
-				    . "WHERE scl_gr.id = scl_pr.group_id \n"
-				    . "AND scl_lc ON scl_pr.location_id = scl_lc.id \n"
-				    . "AND scl_st ON scl_pr.status_id = scl_st.id \n"
-				    . "GROUP BY scl_gr.id ORDER BY name ASC\n"
-				    . "";*/
-			//echo $query;die;
 		    // prepare query statement
 		    $stmt = $this->conn->prepare( $query );
 		     
@@ -128,13 +128,14 @@
 			    $data = array();
 
 			    foreach ($rows as $_row) {
+
 			        $result[] = array(
 			        		'id' => $_row['id'],
 			        		'name' => $_row['name'],
 			        		'ttl_pr' => $_row['ttl_pr'],
 			        		'prts' => json_decode($_row['prts']) // decode json data getting for items
 			        	); 
-						//print_r($_row['prts']);die;
+						
 			    	} //End Foreach
 			    } // End IF
 

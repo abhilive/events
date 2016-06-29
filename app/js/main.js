@@ -53,12 +53,6 @@ app.run(function ($rootScope, $state, loginModal, authenticationSvc) {
 
 });
 
-app.filter('person', function($filter) {
-  return function(input) {
-	console.log(input);
-    //return input ? '\u2713' : '\u2718';
-  };
-});
 
 app.config(function($stateProvider, $urlRouterProvider) {
 
