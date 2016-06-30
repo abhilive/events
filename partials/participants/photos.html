@@ -1,0 +1,30 @@
+<style type="text/css">
+  #carousel img {
+    display: block;
+    opacity: .5;
+    cursor: pointer;
+  }
+  #carousel .flex-active-slide img {
+    opacity: 1;
+    cursor: default;
+  }
+</style>
+
+<div class="md-padding">
+  <!-- for large Image -->
+  <div>
+    <flex-slider slider-id="slider" flex-slide="image in prod.imagePaths track by $index" animation="fade" animation-loop="false" sync="#carousel" slideshow="false" control-nav="false" init-delay="100">
+      <li>
+        <img ng-src="http://172.10.55.66/events/images/nagpur/semifinals/{{image.full_path}}">
+      </li>
+    </flex-slider>
+  </div>
+  <!-- for Thumbnail Image -->
+  <div>
+    <flex-slider slider-id="carousel" flex-slide="image in prod.imagePaths track by $index" animation="slide" animation-loop="false" item-width="210" item-margin="5" as-nav-for="#slider" slideshow="false" control-nav="false">
+      <li>
+        <img ng-src="http://172.10.55.66/events/images/nagpur/semifinals/{{image.thumbnail}}">
+      </li>
+    </flex-slider>
+  </div>
+</div>

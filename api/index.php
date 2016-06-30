@@ -2,6 +2,7 @@
 require '../vendor/autoload.php';
 require_once './config/dbHelper.php';
 include_once 'objects/participants.php';
+include_once 'objects/picnvideos.php';
 include_once 'objects/user.php';
 
 $configuration = [
@@ -122,6 +123,27 @@ $app->post('/participants/add',  function (Request $req,  Response $res, $args =
              ->write(json_encode($response,JSON_NUMERIC_CHECK));
 });
 
+$app->get('/dumpPics',  function (Request $req,  Response $res, $args = []) {
+    global $db;
+    $picnvideos = new Picnvideos($db);
+    // query orders
+
+    $response = $picnvideos->dumpAll();
+    return $res->withStatus(200, 'OK')
+             ->withHeader('Content-Type', 'application/json')
+             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+});
+
+$app->put('/getpics',  function (Request $req,  Response $res, $args = []) {
+    global $db;
+    $picnvideos = new Picnvideos($db);
+    // query orders
+    $response = $picnvideos->getAllPics($req->getParams());
+    return $res->withStatus(200, 'OK')
+             ->withHeader('Content-Type', 'application/json')
+             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+});
+
 // Products
 /*$app->get('/products', function() {
     global $db;
@@ -131,7 +153,7 @@ $app->post('/participants/add',  function (Request $req,  Response $res, $args =
     $data = $product->readAll();
     echoResponse(200, $data);
 });*/
-
+/* Deprecated - Below Twos
 $app->post('/orders', function() use ($app) { 
     $data = json_decode($app->request->getBody());
     $mandatory = array('issuedTo','issuedBy');
@@ -155,6 +177,6 @@ $app->post('/validateno', function() use ($app) {
         $rows["message"] = 'File generated successfully.';
     echoResponse(200, $rows);
 });
-
+*/
 $app->run();
 ?>

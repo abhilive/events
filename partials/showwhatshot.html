@@ -1,64 +1,73 @@
-<div class="virtualRepeatdemoHorizontalUsage" ng-controller="WhatshotCtrl as whctrl" ng-cloak>
+<div class="tabsdemoDynamicTabs" ng-controller="WhatshotCtrl as whctrl" ng-cloak>
 <!--
 Ref Link : https://www.script-tutorials.com/photo-gallery-with-angularjs-and-css3/
 http://plnkr.co/edit/kTSQuJfi5OmOSw6cU06x?p=preview
 https://scotch.io/tutorials/animating-angular-apps-ngshow-and-nghide
 https://github.com/Rademade/angular-cycle-gallery
 -->
-    <!-- slider container -->
-    <div class="container slider">
+  <md-content class="md-padding" >
+        <div layout="column" layout-gt-xs="row" >
+            <md-card flex flex-gt-xs="30" md-theme="dark-purple">
+                <md-card-title>
+          <md-card-title-text>
+          <span class="md-headline">Nagpur</span>
+          <span class="md-subhead">Photos & Videos (Updated: 30th-June-16)</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-actions layout="row" layout-align="end center">
+            <md-button ng-disabled="true" ui-sref="showwhatshot.viewpics({location: 'nagpur',forEvent: 'auditions'})" class="md-raised md-secondary">
+              Auditions
+            </md-button>
+            <md-button ui-sref="showwhatshot.viewpics({location: 'nagpur',forEvent: 'semifinals'})" class="md-raised md-secondary">
+              Semifinals
+            </md-button>
+            <md-button ng-disabled="true" ui-sref="showwhatshot.viewpics({location: 'nagpur',forEvent: 'finals'})" class="md-raised md-secondary">
+              Finals
+            </md-button>
+          </md-card-actions>
+            </md-card>
+            <md-card flex flex-gt-xs="30" md-theme="dark-purple">
+                <md-card-title>
+          <md-card-title-text>
+          <span class="md-headline">Mohali</span>
+          <span class="md-subhead">Photos & Videos (Not Yet Uploaded)</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-actions layout="row" layout-align="end center">
+            <md-button ng-disabled="true" ui-sref="showwhatshot.viewpics({location: 'mohali',forEvent: 'auditions'})" class="md-raised md-secondary">
+              Auditions
+            </md-button>
+            <md-button ng-disabled="true" ui-sref="showwhatshot.viewpics({location: 'mohali',forEvent: 'semifinals'})" class="md-raised md-secondary">
+              Semifinals
+            </md-button>
+            <md-button ng-disabled="true" ui-sref="showwhatshot.viewpics({location: 'mohali',forEvent: 'finals'})" class="md-raised md-secondary">
+              Finals
+            </md-button>
+          </md-card-actions>
+            </md-card>
+      <md-card flex flex-gt-xs="30" md-theme="dark-purple">
+                <md-card-title>
+          <md-card-title-text>
+          <span class="md-headline">Dehradun</span>
+          <span class="md-subhead">Photos & Videos (Not Yet Uploaded)</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-actions layout="row" layout-align="end center">
+            <md-button ng-disabled="true" ui-sref="showwhatshot.viewpics({location: 'dehradun',forEvent: 'auditions'})" class="md-raised md-secondary">
+              Auditions
+            </md-button>
+            <md-button ng-disabled="true" ui-sref="showwhatshot.viewpics({location: 'dehradun',forEvent: 'semifinals'})" class="md-raised md-secondary">
+              Semifinals
+            </md-button>
+            <md-button ng-disabled="true" ui-sref="showwhatshot.viewpics({location: 'dehradun',forEvent: 'finals'})" class="md-raised md-secondary">
+              Finals
+            </md-button>
+          </md-card-actions>
+            </md-card>
+        </div>
+    </md-content>
 
-        <!-- enumerate all photos -->
-        <img ng-repeat="photo in photos" class="slide" ng-swipe-right="showPrev()" ng-swipe-left="showNext()" ng-show="isActive($index)" ng-src="{{photo.src}}" />
-
-        <!-- prev / next controls -->
-        <a class="arrow prev" href="#" ng-click="showPrev()"></a>
-        <a class="arrow next" href="#" ng-click="showNext()"></a>
-
-        <!-- extra navigation controls -->
-        <ul class="nav">
-            <li ng-repeat="photo in photos" ng-class="{'active':isActive($index)}">
-                <img ng-src="{{photo.src}}" alt="{{photo.desc}}" title="{{photo.desc}}" ng-click="showPhoto($index);" />
-            </li>
-        </ul>
-
-    </div>
-	
-	<div id="container">
-
-    <div class="col-sm-12">
-
-      <flex-slider slider-id="slider" flex-slide="image in prod.imagePaths track by $index" animation="fade" animation-loop="false" sync="#carousel" slideshow="false" control-nav="false" init-delay="100">
-
-        <li>
-          <img ng-src="{{image.custom}}">
-        </li>
-
-      </flex-slider>
-    </div>
-    <div class="col-sm-12">
-
-      <flex-slider slider-id="carousel" flex-slide="image in prod.imagePaths track by $index" animation="slide" animation-loop="false" item-width="210" item-margin="5" as-nav-for="#slider" slideshow="false" control-nav="false">
-        <li>
-          <img ng-src="{{image.thumbnail}}">
-        </li>
-      </flex-slider>
-    </div
-</div>
-	
-  <md-content layout="column">
-    <p>
-       Display 1000 item in a virtual-list with viewport of only 16 columns (width=50px).
-       <br/><br/>
-       This demo shows scroll and rendering performance gains when using <code>md-virtual-repeat</code>;
-       achieved with the dynamic reuse of rows visible in the viewport area. Developers are required to
-       explicitly use <code>md-virtual-repeat-container</code> as a wrapping parent container.
-    </p>
-    <md-virtual-repeat-container id="horizontal-container" md-orient-horizontal>
-      <div md-virtual-repeat="item in whctrl.items"
-          class="repeated-item" flex>
-		  <img style="margin: auto; max-width: 100%;" alt="Lush mango tree" src="img/mangues.jpg">
-      </div>
-    </md-virtual-repeat-container>
-  </md-content>
+    <!-- For Content :Start -->
+    <div ui-view></div>
+    <!-- For Content :End -->
 </div>
