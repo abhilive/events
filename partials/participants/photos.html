@@ -1,4 +1,7 @@
 <style type="text/css">
+  #slider img {
+    height: 500px;
+  }
   #carousel img {
     display: block;
     opacity: .5;
@@ -9,13 +12,12 @@
     cursor: default;
   }
 </style>
-
-<div class="md-padding">
+<div layout="column">
   <!-- for large Image -->
   <div>
     <flex-slider slider-id="slider" flex-slide="image in prod.imagePaths track by $index" animation="fade" animation-loop="false" sync="#carousel" slideshow="false" control-nav="false" init-delay="100">
       <li>
-        <img ng-src="http://172.10.55.66/events/images/nagpur/semifinals/{{image.full_path}}">
+          <img ng-src="http://172.10.55.66/events/images/nagpur/semifinals/{{image.full_path}}">
       </li>
     </flex-slider>
   </div>

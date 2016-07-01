@@ -1,47 +1,3 @@
-<div ng-if="showRegister" layout="column" class="md-inline-form">
-    <md-content layout-padding>
-      <div>
-        <form name="registerForm">
-          <div class="layout-gt-sm-row">
-            <md-input-container>
-              <label>Name</label>
-              <input ng-model="user.name" required>
-            </md-input-container>
-            <md-input-container>
-              <label>Email</label>
-              <input ng-model="user.email" type="email" required>
-            </md-input-container>
-            <md-input-container class="md-block" flex-gt-sm>
-                <label>Branch Location</label>
-                <md-select ng-model="user.location" required>
-                  <md-option ng-repeat="loc in brloc" value="{{loc.id}}">
-                    {{loc.name}}
-                  </md-option>
-                </md-select>
-            </md-input-container>
-            <md-input-container class="md-block" flex-gt-sm>
-              <label>Select Activity</label>
-              <md-select ng-model="user.activity" required>
-                <md-option ng-repeat="act in activities" value="{{act.id}}">
-                  {{act.name}}
-                </md-option>
-              </md-select>
-            </md-input-container>
-          </div>
-         <div class="dialog-demo-content" layout="row" layout-wrap layout-margin layout-align="center">
-            <md-button class="md-primary md-raised" ng-click="showConfirm($event)" ng-disabled="registerForm.$invalid">
-              Register Me Please
-            </md-button>
-          </div>
-          <p layout="row" layout-align="center center">
-            Note: Please use <b>&nbsp;comma separated&nbsp;</b> values under <b>&nbsp;name&nbsp;</b> for group performance.
-          </p>
-        </form>
-    </div>
-  </md-content>
-  <md-divider></md-divider>
-  </div>
-
   <md-content class="md-padding" >
         <div layout="column" layout-gt-xs="row" >
             <md-card flex flex-gt-xs="30" md-theme="dark-purple">
@@ -80,8 +36,8 @@
 			<md-card flex flex-gt-xs="30" md-theme="dark-purple">
 				<md-card-title>
 				  <md-card-title-text>
-					<span class="md-headline">National finals</span>
-					<span class="md-subhead">28th July</span>
+					<span class="md-headline">National Finals</span>
+					<span class="md-subhead">10th August</span>
 				  </md-card-title-text>
 				</md-card-title>
 				<md-card-actions layout="column" layout-align="start">
@@ -104,7 +60,7 @@
                     <h3>{{ person.nm }}</h3>
                     <p>{{ person.lc }}</p>
                   </div>
-				  <div layout="column"><code class="warn">{{ person.st }}</code></div>
+				  <div layout="column"><code class="notification">{{ person.st }}</code></div>
           <div>
     					<!--<md-button class="md-fab md-mini" aria-label="Eat cake">
     						<md-icon md-svg-src="img/icons/cake.svg"></md-icon>
