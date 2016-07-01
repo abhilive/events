@@ -9,7 +9,7 @@
             </md-input-container>
             <md-input-container>
               <label>Email</label>
-              <input ng-model="participant.email" type="email" required>
+              <input ng-model="participant.email" name="email" type="email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@smartdatainc.net$/" required>
             </md-input-container>
             <md-input-container class="md-block" flex-gt-sm>
                 <label>Branch Location</label>
@@ -34,11 +34,12 @@
             </md-button>
           </div>
           <p layout="row" layout-align="center center">
-            Note: Please use <b>&nbsp;comma separated&nbsp;</b> values under <b>&nbsp;name&nbsp;</b> for group performance.
+            Note: Please use <code class="warn">&nbsp;comma separated&nbsp;</code> values under <code class="warn">&nbsp;name&nbsp;</code> for group performance.
+          </p>
+          <p layout="row" layout-align="center center">
+            Only smartData valid emailid's are allowed. For Ex: <code class="warn">ex@smartdatainc.net</code>
           </p>
 		  <p>
-			<code>md-menu-content</code> may specify a <code>width</code> attribute which will follow
-			the <a href="ctrl.menuHref" class="md-accent">official spec</a>.
 		  </p>
         </form>
     </div>

@@ -11,7 +11,7 @@
 		// object properties 
 
 		private $_order = array();
-		private $_status = 0;
+		private $_status = 5;
 		private $_message = 'Information has been saved successfully.';
 
 		// constructor with $db as database connection 
@@ -103,15 +103,15 @@
 		     
 		    // execute query
 		    $stmt->execute();
-
+		    //Add condition to exclude (Garbage, Disqualified & WildCard Entry);
 		    $query = "SELECT scl_gr.id, scl_gr.name, COUNT(scl_pr.id) as ttl_pr, ".$json_params." \n"
 		    		. "FROM ".$this->group_table_name." AS scl_gr \n"
-				    . "JOIN ".$this->participants_table_name." AS scl_pr ON scl_gr.id = scl_pr.group_id \n"
+				    . "JOIN ".$this->participants_table_name." AS scl_pr ON scl_gr.id = scl_pr.group_id AND scl_pr.status_id NOT IN (0,1,2) \n"
 				    . "JOIN ".$this->location_table_name." AS scl_lc ON scl_pr.location_id = scl_lc.id \n"
 				    . "JOIN ".$this->status_table_name." AS scl_st ON scl_pr.status_id = scl_st.id \n"
 				    . "GROUP BY scl_gr.id ORDER BY name ASC\n"
 				    . "";
-
+			//echo $query;die;
 		    // prepare query statement
 		    $stmt = $this->conn->prepare( $query );
 		     
@@ -180,22 +180,24 @@
 		    $query = "INSERT INTO 
 		                " . $this->participants_table_name . "
 		            SET 
-		                name = :name, email=:email, group_id=:group_id, location_id=:location_id";
+		                name = :name, email=:email, group_id=:group_id, location_id=:location_id, status_id=:status_id";
 		     
 		    // prepare query
 		    $stmt = $this->conn->prepare($query);
 		 
 		    // posted values
 		    $part_names = htmlspecialchars(strip_tags($params['name']));
-		    $part_emails = htmlspecialchars(strip_tags($params['email']));
+		    $part_emails = strip_tags($params['email']);
 		    $part_grp = htmlspecialchars($params['activity']);
 		    $part_lcn = htmlspecialchars($params['location']);
+		    $part_status_id = $this->getStatus();
 		 
 		    // bind values
 		    $stmt->bindParam(":name", $part_names, PDO::PARAM_STR, 200);
 			$stmt->bindParam(":email", $part_emails, PDO::PARAM_STR, 200);
 		    $stmt->bindParam(":group_id", $part_grp);
 		    $stmt->bindParam(":location_id", $part_lcn);
+		    $stmt->bindParam(":status_id", $part_status_id);
 
 		     	if($stmt->execute()){
 		     		$response["status"] = "success";

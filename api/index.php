@@ -112,8 +112,8 @@ $app->delete('/participants/{id}',  function (Request $req,  Response $res, $arg
              ->write(json_encode($response,JSON_NUMERIC_CHECK));
 });
 
-$app->post('/participants/add',  function (Request $req,  Response $res, $args = []) { 
-
+$app->put('/participants/add',  function (Request $req,  Response $res, $args = []) { 
+    print_r($req->getParams());die;
     global $db;
     $participants = new Participants($db);
     $response = $participants->add($req->getParams());

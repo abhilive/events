@@ -65,6 +65,7 @@ $urlRouterProvider.when('', '/');
     .state('index', {
       url: "/",
       templateUrl: "partials/dashboard.html",
+      controller: "UserDashboardCtrl",
 	    data: {
         requireLogin: false,
         title: 'smartData Cultural League'
@@ -160,35 +161,10 @@ app.service('loginModal', function ($mdDialog, $rootScope) {
 app.controller('AppCtrl', function($scope, $rootScope, $state, $mdDialog, $mdBottomSheet, $mdToast, Data, loginModal, authenticationSvc) {
     console.log('AppCtrl reporting for duty.');
 
-    $scope.showRegister = false;
-    $scope.register = function(ev) {
-        console.log($scope.showRegister);
-        if($scope.showRegister){
-          $scope.showRegister = false;
-        } else {
-          $scope.showRegister = true;
-        }
-    };
-
     $scope.openAdmin = function(ev){
       loginModal();
     };
 
-    $scope.brloc = [
-        { id: 1, name: 'Nagpur' },
-        { id: 2, name: 'Mohali' },
-        { id: 3, name: 'Dehradun' }
-    ];
-
-    // Retrieve all Activities
-    Data.get('activities').then(function(data){
-        $scope.activities = data.data;
-	  });
-
-  // Retrieve all Groups
-  Data.get('groups').then(function(data){
-      $scope.groups = data.data;
-	});
   //To show toast messages
   $scope.showSimpleToast = function(message) {
     $mdToast.show(
@@ -219,16 +195,77 @@ app.controller('AppCtrl', function($scope, $rootScope, $state, $mdDialog, $mdBot
 		});
 	};
 
-    $scope.openBoxForUserEntry = function() {
-      $mdBottomSheet.show({
-        templateUrl: 'partials/form-add-user-entry.html',
-        controller: 'BottomSheetCtrlForEntry'
-      }).then(function(clickedItem) {
-        console.log('test');
-      });
-    };
+  $scope.openBoxForUserEntry = function() {
+    $mdBottomSheet.show({
+      templateUrl: 'partials/form-add-user-entry.html',
+      controller: 'BottomSheetCtrlForEntry'
+    }).then(function(clickedItem) {
+      console.log('test');
+    });
+  };
 
 }); // End Controller - AppCtrl
+
+app.controller('UserDashboardCtrl', function ($mdDialog, $state, $scope, $rootScope, Data) {
+  console.log('UserDashboardCtrl reporting for duty.');
+
+  $scope.brloc = [
+        { id: 1, name: 'Nagpur' },
+        { id: 2, name: 'Mohali' },
+        { id: 3, name: 'Dehradun' }
+    ];
+
+  // Retrieve all Activities
+  Data.get('activities').then(function(data){
+      $scope.activities = data.data;
+  });
+
+  // Retrieve all Groups - Retrieved For Listing
+  Data.get('groups').then(function(data){
+      $scope.groups = data.data;
+  });
+
+  $scope.goToPerson = function(person, event) {
+    console.log(person);
+    $mdDialog.show({
+      targetEvent: event,
+      template:
+        '<md-dialog>' +
+        '  <md-dialog-content>{{ personInfo.nm }}!</md-dialog-content>' +
+        '  <md-dialog-actions>' +
+        '    <md-button ng-click="closeDialog()" class="md-primary">' +
+        '      Close Greeting' +
+        '    </md-button>' +
+        '  </md-dialog-actions>' +
+        '</md-dialog>',
+      controller: 'DialogController',
+      //onComplete: afterShowAnimation,
+      locals: { personInfo: person }
+    });
+    /*$mdDialog.show(
+      $mdDialog.alert()
+        .title('Participant')
+        .textContent('Name ' + person.nm)
+        .ariaLabel('Person inspect demo')
+        .ok('Close')
+        .targetEvent(event)
+    );*/
+    /*$mdDialog.show({
+      controller: DialogController,
+      templateUrl: 'partials/paticipants/viewparticipant.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      clickOutsideToClose:true,
+      fullscreen: useFullScreen
+    })
+    .then(function(answer) {
+      $scope.status = 'You said the information was "' + answer + '".';
+    }, function() {
+      $scope.status = 'You cancelled the dialog.';
+    });*/
+  };
+
+});
 
 app.controller('WhatshotCtrl', function ($mdDialog, $state, $scope, $rootScope, Data) {
 	console.log('WhatshotCtrl reporting for duty.');
@@ -238,50 +275,17 @@ app.controller('WhatshotCtrl', function ($mdDialog, $state, $scope, $rootScope, 
 app.controller('PicsCtrl', function ($mdDialog, $state, $stateParams, $scope, $rootScope, Data) {
   console.log('PicsCtrl reporting for duty.');
 
-  // Set of Photos : Start
-    $scope.photos = [
-        {src: 'http://farm9.staticflickr.com/8042/7918423710_e6dd168d7c_b.jpg', desc: 'Image 01'},
-        {src: 'http://farm9.staticflickr.com/8449/7918424278_4835c85e7a_b.jpg', desc: 'Image 02'},
-        {src: 'http://farm9.staticflickr.com/8457/7918424412_bb641455c7_b.jpg', desc: 'Image 03'},
-        {src: 'http://farm9.staticflickr.com/8179/7918424842_c79f7e345c_b.jpg', desc: 'Image 04'},
-        {src: 'http://farm9.staticflickr.com/8315/7918425138_b739f0df53_b.jpg', desc: 'Image 05'},
-        {src: 'http://farm9.staticflickr.com/8461/7918425364_fe6753aa75_b.jpg', desc: 'Image 06'}
-    ];
-
-    // initial image index
-    $scope._Index = 0;
-
-    // if a current image is the same as requested image
-    $scope.isActive = function (index) {
-        return $scope._Index === index;
-    };
-
-    // show prev image
-    $scope.showPrev = function () {
-        $scope._Index = ($scope._Index > 0) ? --$scope._Index : $scope.photos.length - 1;
-    };
-
-    // show next image
-    $scope.showNext = function () {
-        $scope._Index = ($scope._Index < $scope.photos.length - 1) ? ++$scope._Index : 0;
-    };
-
-    // show a certain image
-    $scope.showPhoto = function (index) {
-        $scope._Index = index;
-    };
-    /*END*/
-
   $scope.prod = {imagePaths: []};
   //$scope.prod = function() {
       Data.put('getpics',{ location: $stateParams.location, forEvent: $stateParams.forEvent }).then(function(data){
-        console.log(data.data);
+        //console.log(data.data);
         $scope.prod.imagePaths = data.data;
       });
   //};
 });
 
-function DialogController($scope, $mdDialog) {
+app.controller('DialogController', function ($scope, $mdDialog) {
+  console.log('DialogController reporting for duty.');
   $scope.hide = function() {
     $mdDialog.hide();
   };
@@ -291,7 +295,19 @@ function DialogController($scope, $mdDialog) {
   $scope.answer = function(answer) {
     $mdDialog.hide(answer);
   };
-}
+});
+
+/*function DialogController($scope, $mdDialog) {
+  $scope.hide = function() {
+    $mdDialog.hide();
+  };
+  $scope.cancel = function() {
+    $mdDialog.cancel();
+  };
+  $scope.answer = function(answer) {
+    $mdDialog.hide(answer);
+  };
+}*/
 
 //Admin- Login Controller
 app.controller('LoginCtrl', function ($mdDialog, $state, $scope, $rootScope, authenticationSvc) {
@@ -422,8 +438,8 @@ app.controller('BottomSheetCtrlForEntry', function ($mdDialog, $mdToast, $mdBott
             .ok('Okay! I Agree')
             .cancel('Cancel');
       $mdDialog.show(confirm).then(function() {
-        console.log($scope.user);
-        Data.post("participants/add", $scope.participant)
+        //console.log($scope.user);
+        Data.put("participants/add", $scope.participant)
             .then(function(result){
               if(result.status==='success') {
                   $scope.showSimpleToast('HR Person will contact you shortly.');
@@ -436,7 +452,7 @@ app.controller('BottomSheetCtrlForEntry', function ($mdDialog, $mdToast, $mdBott
         $mdBottomSheet.cancel();
       }, function() {
         //$scope.status = '';
-        $scope.showRegister = false;
+        //$scope.showRegister = false;
         $scope.user = $scope.user.name = $scope.user.email = {};
       });
     };
@@ -450,7 +466,7 @@ app.controller('BottomSheetCtrlForEntry', function ($mdDialog, $mdToast, $mdBott
             .ok('Yes! Consider this Entry')
             .cancel('Cancel');
       $mdDialog.show(confirm).then(function() {
-        Data.post("participants/add", $scope.participant)
+        Data.put("participants/add", $scope.participant)
             .then(function(result){
                 if(result.status==='success') {
                     $scope.showSimpleToast('Entry is confirmed for semifinals.');
@@ -464,7 +480,7 @@ app.controller('BottomSheetCtrlForEntry', function ($mdDialog, $mdToast, $mdBott
         $mdBottomSheet.cancel();
       }, function() {
         //$scope.status = '';
-        $scope.showRegister = false;
+        //$scope.showRegister = false;
         $scope.user = $scope.user.name = $scope.user.email = {};
       });
     };

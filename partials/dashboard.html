@@ -1,25 +1,25 @@
-  <md-content class="md-padding" >
+  <md-content class="md-padding dashboard-top" >
         <div layout="column" layout-gt-xs="row" >
-            <md-card flex flex-gt-xs="30" md-theme="dark-purple">
+            <md-card class="events-card" flex flex-gt-xs="30">
                 <md-card-title>
 				  <md-card-title-text>
-					<span class="md-headline">Auditions</span>
-					<span class="md-subhead">Starts from 15th June</span>
+					<span class="md-headline">Auditions (Finished)</span>
+					<span class="md-subhead">Only WildCard Entries Allowed</span>
 				  </md-card-title-text>
 				</md-card-title>
 				<md-card-actions layout="column" layout-align="start">
-				  <md-button class="md-raised md-warn">Show Finalist</md-button>
+				  <md-button ng-disabled="true" class="md-raised md-warn">Show Finalist</md-button>
 				</md-card-actions>
             </md-card>
             <md-card flex flex-gt-xs="30" md-theme="dark-purple">
                 <md-card-title>
 				  <md-card-title-text>
 					<span class="md-headline">Branch Semi Finals</span>
-					<span class="md-subhead">30th June</span>
+					<span class="md-subhead">30th June (Ongoing)</span>
 				  </md-card-title-text>
 				</md-card-title>
 				<md-card-actions layout="column" layout-align="start">
-				  <md-button class="md-raised" ng-disabled="true">Show Finalist</md-button>
+				  <md-button class="md-raised md-warn" ng-click="showEntries();">Show Finalist</md-button>
 				</md-card-actions>
             </md-card>
 			<md-card flex flex-gt-xs="30" md-theme="dark-purple">
@@ -47,29 +47,29 @@
         </div>
     </md-content>
 
-  <div class="sample tabsdemoDynamicTabs" layout="column" ng-cloak>
-    <md-content class="md-padding">
-      <md-tabs class="md-hue-2" md-selected="selectedIndex" md-dynamic-height md-border-bottom md-autoselect>
+  <div class="tabsdemoDynamicTabs" layout="column" ng-cloak>
+    <md-content class="md-padding dashboard-bottom">
+      <md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom md-autoselect>
         <md-tab ng-repeat="tab in groups"
                 label="{{tab.name}}">
           <div class="participants demo-tab tab{{$index%4}}">
               <md-list class="list" flex>
                 <md-subheader class="md-no-sticky md-warn">{{tab.ttl_pr}} Selected Entries (Max:20, Closing Date: 24-June-16) </md-subheader>
-                <md-list-item class="md-3-line" ng-repeat="person in tab.prts" ng-click="goToPerson(person.id, $event)" class="noright">
+                <md-list-item class="md-3-line" ng-repeat="person in tab.prts" ng-click="goToPerson(person, $event)" class="noright">
                   <div class="md-list-item-text" layout="column">
                     <h3>{{ person.nm }}</h3>
                     <p>{{ person.lc }}</p>
                   </div>
-				  <div layout="column"><code class="notification">{{ person.st }}</code></div>
-          <div>
+				        <div layout="column"><code class="notification">{{ person.st }}</code></div>
+          <!--<div>-->
     					<!--<md-button class="md-fab md-mini" aria-label="Eat cake">
     						<md-icon md-svg-src="img/icons/cake.svg"></md-icon>
     					</md-button>-->
-    					<md-button class="md-fab md-mini md-primary" aria-label="Contacts">
+    					<!--<md-button class="md-fab md-mini md-primary" aria-label="Contacts">
     					  <md-icon md-svg-src="img/icons/ic_contacts_24px.svg" style="color: greenyellow;"></md-icon>
                 <md-tooltip>Contacts</md-tooltip>
     					</md-button>
-				  </div>
+				  </div>-->
                   <!--<md-button ui-sref="viewpics({participantId: person.id})" class="md-raised md-secondary">View Photos</md-button>-->
                   <!--<md-icon md-svg-icon="communication:email" ng-click="doSecondaryAction($event)" aria-label="Send Email" class="md-secondary md-hue-3" ></md-icon>
                   <md-icon class="md-secondary" ng-click="doSecondaryAction($event)" aria-label="Chat" md-svg-icon="communication:message"></md-icon>

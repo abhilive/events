@@ -1,0 +1,8 @@
+
+1. Introduction of Client and project name
+2. Specify on which domain your project comes.
+3. Brief description  about that domain.
+4. Specify how your project is relevant to that domain.
+5. Share any third party API or something new which has been implemented in your project.
+6. Discuss the challenges you have faced.
+7. After sharing the knowledge ask if anyone has questions for you. If no one initiates, then do it from your end. Ask questions about the domain to people you know who have worked on the same. Try to interact with the audience. Make them involved.
