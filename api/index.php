@@ -67,6 +67,17 @@ $app->get('/participants',  function (Request $req,  Response $res, $args = []) 
              ->write(json_encode($response,JSON_NUMERIC_CHECK));
 });
 
+$app->get('/viewparticipant',  function (Request $req,  Response $res, $args = []) {
+    global $db;
+    $participants = new Participants($db);
+    // query orders
+	$params = $req->getQueryParams();
+    $response = $participants->load($params['Id']);
+    return $res->withStatus(200, 'OK')
+             ->withHeader('Content-Type', 'application/json')
+             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+});
+
 // Orders
 $app->get('/orders', function() {
     global $db;

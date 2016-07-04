@@ -1,0 +1,73 @@
+<div ng-controller="WhatshotCtrl as whctrl" ng-cloak>
+<!--
+Ref Link : https://www.script-tutorials.com/photo-gallery-with-angularjs-and-css3/
+http://plnkr.co/edit/kTSQuJfi5OmOSw6cU06x?p=preview
+https://scotch.io/tutorials/animating-angular-apps-ngshow-and-nghide
+https://github.com/Rademade/angular-cycle-gallery
+-->
+  <md-content class="md-padding dashboard-top" >
+        <div layout="column" layout-gt-xs="row" >
+            <md-card class="events-card" flex flex-gt-xs="30">
+                <md-card-title>
+          <md-card-title-text>
+          <span class="md-headline">Nagpur</span>
+          <span class="md-subhead">Photos & Videos (Updated: 30th-June-16)</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-actions layout="row" layout-align="end center">
+            <md-button ng-disabled="true" ui-sref="photosnvideos.viewpics({location: 'nagpur',forEvent: 'auditions'})" class="md-raised md-secondary">
+              Auditions
+            </md-button>
+            <md-button ui-sref="photosnvideos.viewpics({location: 'nagpur',forEvent: 'semifinals'})" class="md-raised md-secondary">
+              Semifinals
+            </md-button>
+            <md-button ng-disabled="true" ui-sref="photosnvideos.viewpics({location: 'nagpur',forEvent: 'finals'})" class="md-raised md-secondary">
+              Finals
+            </md-button>
+          </md-card-actions>
+            </md-card>
+            <md-card flex flex-gt-xs="30" md-theme="dark-purple">
+                <md-card-title>
+          <md-card-title-text>
+          <span class="md-headline">Mohali</span>
+          <span class="md-subhead">Photos & Videos (Not Yet Uploaded)</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-actions layout="row" layout-align="end center">
+            <md-button ng-disabled="true" ui-sref="photosnvideos.viewpics({location: 'mohali',forEvent: 'auditions'})" class="md-raised md-secondary">
+              Auditions
+            </md-button>
+            <md-button ng-disabled="true" ui-sref="photosnvideos.viewpics({location: 'mohali',forEvent: 'semifinals'})" class="md-raised md-secondary">
+              Semifinals
+            </md-button>
+            <md-button ng-disabled="true" ui-sref="photosnvideos.viewpics({location: 'mohali',forEvent: 'finals'})" class="md-raised md-secondary">
+              Finals
+            </md-button>
+          </md-card-actions>
+            </md-card>
+      <md-card flex flex-gt-xs="30" md-theme="dark-purple">
+                <md-card-title>
+          <md-card-title-text>
+          <span class="md-headline">Dehradun</span>
+          <span class="md-subhead">Photos & Videos (Not Yet Uploaded)</span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-actions layout="row" layout-align="end center">
+            <md-button ng-disabled="true" ui-sref="photosnvideos.viewpics({location: 'dehradun',forEvent: 'auditions'})" class="md-raised md-secondary">
+              Auditions
+            </md-button>
+            <md-button ng-disabled="true" ui-sref="photosnvideos.viewpics({location: 'dehradun',forEvent: 'semifinals'})" class="md-raised md-secondary">
+              Semifinals
+            </md-button>
+            <md-button ng-disabled="true" ui-sref="photosnvideos.viewpics({location: 'dehradun',forEvent: 'finals'})" class="md-raised md-secondary">
+              Finals
+            </md-button>
+          </md-card-actions>
+            </md-card>
+        </div>
+    </md-content>
+
+    <!-- For Content :Start -->
+      <div ui-view></div>
+    <!-- For Content :End -->
+</div>

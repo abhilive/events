@@ -11,7 +11,7 @@
 		// object properties 
 
 		private $_order = array();
-		private $_status = 5;
+		private $_status = 5; //Set Default Status to garbage value
 		private $_message = 'Information has been saved successfully.';
 
 		// constructor with $db as database connection 
@@ -38,6 +38,39 @@
 	            $stmt = $this->conn->prepare( $query );
 	            $stmt->execute();
 	            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+	            if(count($rows)<=0){
+	                $response["status"] = "warning";
+	                $response["message"] = "No data found.";
+	            }else{
+	                $response["status"] = "success";
+	                $response["message"] = "Data selected from database";
+	            }
+	            	
+                $response["data"] = $rows;
+                //$response["data"]["items"] = json_decode($rows["items"]);
+	        }catch(PDOException $e){
+	            $response["status"] = "error";
+	            $response["message"] = 'Select Failed: ' .$e->getMessage();
+	            $response["data"] = null;
+	        }
+	        return $response;
+		}
+		// read orders
+		function load($part_id) {
+			try{
+		    // select all query
+	            $query = "SELECT scl_pr.id AS id, scl_pr.name AS participant_name, scl_pr.name AS group_name, scl_lc.name AS location, scl_st.title AS status \n"
+				    . "FROM ".$this->participants_table_name." AS scl_pr \n"
+					. "JOIN ".$this->group_table_name." AS scl_gr ON scl_pr.group_id = scl_gr.id \n"
+				    . "JOIN ".$this->location_table_name." AS scl_lc ON scl_pr.location_id = scl_lc.id \n"
+				    . "JOIN ".$this->status_table_name." AS scl_st ON scl_pr.status_id = scl_st.id \n"
+					. "WHERE scl_pr.id = ".$part_id." \n"
+				    . "";
+				    //echo $query;die;
+	            $stmt = $this->conn->prepare( $query );
+	            $stmt->execute();
+	            $rows = $stmt->fetch(PDO::FETCH_ASSOC);
 
 	            if(count($rows)<=0){
 	                $response["status"] = "warning";

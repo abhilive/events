@@ -1,0 +1,57 @@
+<style type="text/css">
+  /*#slider img {
+    height: 427px;
+	width: 640px;
+  }*/
+  #carousel img {
+    display: block;
+    opacity: .5;
+    cursor: pointer;
+  }
+  #carousel .flex-active-slide img {
+    opacity: 1;
+    cursor: default;
+  }
+</style>
+<md-content class="md-padding">
+	<div layout="row" layout-align="center center" layout-gt-xs="row" >
+      <div flex="50">
+		<!--<img ng-src="http://127.0.0.1/events/images/nagpur/semifinals/IMG_6374.jpg">-->
+		<flex-slider slider-id="slider" flex-slide="image in prod.imagePaths track by $index" animation="fade" animation-loop="false" sync="#carousel" slideshow="false" control-nav="false" init-delay="100">
+		  <li>
+			  <img flex ng-src="http://127.0.0.1/events/images/nagpur/semifinals/{{image.full_path}}">
+		  </li>
+		</flex-slider>
+	  </div>
+	</div>
+	<div layout="row" layout-align="center center" layout-gt-xs="row" >
+      <div flex="50">
+		<!--<img ng-src="http://127.0.0.1/events/images/nagpur/semifinals/IMG_6374.jpg">-->
+		<flex-slider slider-id="carousel" flex-slide="image in prod.imagePaths track by $index" animation="slide" animation-loop="false" item-width="210" item-margin="5" as-nav-for="#slider" slideshow="false" control-nav="false">
+		  <li>
+			<img ng-src="http://127.0.0.1/events/images/nagpur/semifinals/{{image.thumbnail}}">
+		  </li>
+		</flex-slider>
+	  </div>
+	</div>
+</md-content>
+<md-content class="md-padding">
+<div layout="column">
+  <!-- for large Image -->
+  <div>
+    <flex-slider slider-id="slider" flex-slide="image in prod.imagePaths track by $index" animation="fade" animation-loop="false" sync="#carousel" slideshow="false" control-nav="false" init-delay="100">
+      <li>
+          <img ng-src="http://127.0.0.1/events/images/nagpur/semifinals/{{image.full_path}}">
+      </li>
+    </flex-slider>
+  </div>
+  <!-- for Thumbnail Image -->
+  <div>
+    <flex-slider slider-id="carousel" flex-slide="image in prod.imagePaths track by $index" animation="slide" animation-loop="false" item-width="210" item-margin="5" as-nav-for="#slider" slideshow="false" control-nav="false">
+      <li>
+        <img ng-src="http://127.0.0.1/events/images/nagpur/semifinals/{{image.thumbnail}}">
+      </li>
+    </flex-slider>
+  </div>
+</div>
+</md-content>

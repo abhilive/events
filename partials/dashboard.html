@@ -7,69 +7,77 @@
 					<span class="md-subhead">Only WildCard Entries Allowed</span>
 				  </md-card-title-text>
 				</md-card-title>
-				<md-card-actions layout="column" layout-align="start">
+				<!--<md-card-actions layout="column" layout-align="start">
 				  <md-button ng-disabled="true" class="md-raised md-warn">Show Finalist</md-button>
-				</md-card-actions>
+				</md-card-actions>-->
             </md-card>
-            <md-card flex flex-gt-xs="30" md-theme="dark-purple">
+            <md-card class="events-card" flex flex-gt-xs="30">
                 <md-card-title>
 				  <md-card-title-text>
 					<span class="md-headline">Branch Semi Finals</span>
 					<span class="md-subhead">30th June (Ongoing)</span>
 				  </md-card-title-text>
 				</md-card-title>
-				<md-card-actions layout="column" layout-align="start">
-				  <md-button class="md-raised md-warn" ng-click="showEntries();">Show Finalist</md-button>
-				</md-card-actions>
+				<!---<md-card-actions layout="column" layout-align="start">
+				  <md-button class="md-accent md-raised md-hue-1" ng-click="showEntries();">Show Finalist</md-button>
+				</md-card-actions>-->
             </md-card>
-			<md-card flex flex-gt-xs="30" md-theme="dark-purple">
+			<md-card class="events-card" flex flex-gt-xs="30">
                 <md-card-title>
 				  <md-card-title-text>
 					<span class="md-headline">Branch Finals</span>
 					<span class="md-subhead">14th July</span>
 				  </md-card-title-text>
 				</md-card-title>
-				<md-card-actions layout="column" layout-align="start">
+				<!--<md-card-actions layout="column" layout-align="start">
 				  <md-button class="md-raised" ng-disabled="true">Show Finalist</md-button>
-				</md-card-actions>
+				</md-card-actions>-->
             </md-card>
-			<md-card flex flex-gt-xs="30" md-theme="dark-purple">
+			<md-card class="events-card" flex flex-gt-xs="30">
 				<md-card-title>
 				  <md-card-title-text>
 					<span class="md-headline">National Finals</span>
 					<span class="md-subhead">10th August</span>
 				  </md-card-title-text>
 				</md-card-title>
-				<md-card-actions layout="column" layout-align="start">
+				<!--<md-card-actions layout="column" layout-align="start">
 				  <md-button class="md-raised" ng-disabled="true">Winners</md-button>
-				</md-card-actions>
-			  </md-card>
+				</md-card-actions>-->
+			</md-card>
         </div>
     </md-content>
-
-  <div class="tabsdemoDynamicTabs" layout="column" ng-cloak>
-    <md-content class="md-padding dashboard-bottom">
-      <md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom md-autoselect>
+	<!--<md-progress-linear md-mode="indeterminate" ng-disabled=""></md-progress-linear>-->
+    <md-content class="md-padding dashboard-bottom" layout-xs="column" layout="row">
+	  <div flex-xs flex-gt-xs="70" layout="column" class="tabsdemoDynamicTabs">
+		<md-tabs md-selected="selectedIndex" md-dynamic-height md-border-bottom md-autoselect>
         <md-tab ng-repeat="tab in groups"
                 label="{{tab.name}}">
-          <div class="participants demo-tab tab{{$index%4}}">
+          <div class="tab{{$index%4}}">
               <md-list class="list" flex>
-                <md-subheader class="md-no-sticky md-warn">{{tab.ttl_pr}} Selected Entries (Max:20, Closing Date: 24-June-16) </md-subheader>
+                <md-subheader class="md-no-sticky md-warn">{{tab.ttl_pr}} Selected Entries (Max:20, Closing Date: 15-July-16) </md-subheader>
                 <md-list-item class="md-3-line" ng-repeat="person in tab.prts" ng-click="goToPerson(person, $event)" class="noright">
-                  <div class="md-list-item-text" layout="column">
-                    <h3>{{ person.nm }}</h3>
+                  <!--<img alt="{{ person.nm }}" ng-src="{{ person.img }}" class="md-avatar" />-->
+					<md-button class="md-fab" aria-label="Eat cake">
+						<md-icon md-svg-icon="img/icons/ic_star_border_18px.svg" class="md-avatar" style="color: greenyellow;"></md-icon>
+					</md-button>
+				  <div class="md-list-item-text" layout="column">
+                    <h3>{{ person.nm | limitTo: 25 }}{{person.nm.length > 25 ? '...' : ''}}</h3>
                     <p>{{ person.lc }}</p>
                   </div>
-				        <div layout="column"><code class="notification">{{ person.st }}</code></div>
-          <!--<div>-->
-    					<!--<md-button class="md-fab md-mini" aria-label="Eat cake">
+					<div layout="column">
+						<md-chips>
+							<md-chip>{{person.st}}</md-chip>
+						</md-chips>
+					</div>
+					<!--<div>
+    					<md-button class="md-fab md-mini" aria-label="Eat cake">
     						<md-icon md-svg-src="img/icons/cake.svg"></md-icon>
-    					</md-button>-->
-    					<!--<md-button class="md-fab md-mini md-primary" aria-label="Contacts">
-    					  <md-icon md-svg-src="img/icons/ic_contacts_24px.svg" style="color: greenyellow;"></md-icon>
-                <md-tooltip>Contacts</md-tooltip>
     					</md-button>
-				  </div>-->
+    					<md-button class="md-fab md-mini md-primary" aria-label="Contacts">
+							<md-icon md-svg-src="img/icons/ic_contacts_24px.svg" style="color: greenyellow;"></md-icon>
+							<md-tooltip>Contacts</md-tooltip>
+    					</md-button>
+					</div>-->
                   <!--<md-button ui-sref="viewpics({participantId: person.id})" class="md-raised md-secondary">View Photos</md-button>-->
                   <!--<md-icon md-svg-icon="communication:email" ng-click="doSecondaryAction($event)" aria-label="Send Email" class="md-secondary md-hue-3" ></md-icon>
                   <md-icon class="md-secondary" ng-click="doSecondaryAction($event)" aria-label="Chat" md-svg-icon="communication:message"></md-icon>
@@ -80,5 +88,54 @@
           </div>
         </md-tab>
       </md-tabs>
+	  </div>
+	  <div flex-xs flex-gt-xs="30" layout="column">
+		<md-card class="info-card">
+		<md-card-header>
+          <md-card-avatar>
+            <md-icon md-svg-src="img/icons/ic_announcement_24px.svg"></md-icon>
+          </md-card-avatar>
+          <md-card-header-text>
+            <span class="md-title">Announcements</span>
+            <!--<span class="md-subhead">Material</span>-->
+          </md-card-header-text>
+        </md-card-header>
+        <!--<md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Announcements</span>
+            <span class="md-subhead">Medium</span>
+          </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-md card-media"></div>
+          </md-card-title-media>
+        </md-card-title>-->
+		<md-card-content>
+		<md-card-actions layout="column" layout-align="start">
+          <md-button class="md-raised" ng-click="goToState('notifications');">Semifinal Rules</md-button>
+        </md-card-actions>
+		<md-divider></md-divider>
+		<md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Jury Panel</span>
+          </md-card-title-text>
+        </md-card-title>
+          <p>
+            The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+            two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+          </p>
+          <p>
+            The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+            two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+          </p>
+          <p>
+            The titles of Washed Out's breakthrough song and the first single from Paracosm share the
+            two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
+          </p>
+        </md-card-content>
+        <md-card-actions layout="row" layout-align="end center">
+          <md-button>Action 1</md-button>
+          <md-button>Action 2</md-button>
+        </md-card-actions>
+      </md-card>
+	  </div>
     </md-content>
-  </div>

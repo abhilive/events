@@ -33,6 +33,13 @@
         </h2>
         <span flex></span>
         <div>
+			<!--<md-nav-bar md-selected-nav-item="currentNavItem" nav-bar-aria-label="navigation links">
+			  <md-nav-item md-nav-sref="index" name="Dashboard">Dashboard</md-nav-item>
+			  <md-nav-item md-nav-sref="showwhatshot" name="Whats Hot">Whats Hot</md-nav-item>
+			  <md-nav-item md-nav-click="openBoxForUserEntry()" name="Wildcard Entry">Wildcard Entry</md-nav-item>
+			  <md-nav-item md-nav-sref="notifications" name="Notifications">Notifications</md-nav-item>
+			  <md-nav-item md-nav-click="openAdmin()" name="Admin Login">Admin</md-nav-item>
+			</md-nav-bar>-->
 			<md-button ng-click="goToState('index');" class="md-icon-button" aria-label="Dashboard">
 				<md-icon md-svg-icon="img/icons/ic_dashboard_24px.svg"></md-icon>
 				<md-tooltip>Dashboard</md-tooltip>
@@ -40,6 +47,10 @@
 			<md-button ng-click="goToState('showwhatshot');" aria-label="Whats Hot" class="md-icon-button">
 				<md-icon md-svg-src="img/icons/ic_whatshot_24px.svg"></md-icon>
 				<md-tooltip>Whats Hot</md-tooltip>
+			</md-button>
+			<md-button ng-click="goToState('photosnvideos');" aria-label="Photos & Videos" class="md-icon-button">
+				<md-icon md-svg-src="img/icons/ic_photo_24px.svg"></md-icon>
+				<md-tooltip>Photos & Videos</md-tooltip>
 			</md-button>
 			  <md-button aria-label="label" class="md-icon-button" ng-click="openBoxForUserEntry()">
 				<md-icon md-svg-src="img/icons/ic_fiber_new_24px.svg"></md-icon>
@@ -49,9 +60,9 @@
 				<md-icon md-svg-icon="social:notifications-on" style="color: #0F0;" aria-label="Alarm Icon"></md-icon>
 				<md-tooltip>Notifications</md-tooltip>
 			  </md-button>
-			<md-button ng-click="goToState('place');" class="md-icon-button" aria-label="Place">
-				<md-icon md-svg-icon="img/icons/ic_place_24px.svg"></md-icon>
-				<md-tooltip>Event Location</md-tooltip>
+			<md-button ng-click="goToState('contactus');" class="md-icon-button" aria-label="Contact Us">
+				<md-icon md-svg-icon="img/icons/ic_phone_24px.svg"></md-icon>
+				<md-tooltip>Contact Us</md-tooltip>
 			</md-button>
           <md-button aria-label="label" class="md-icon-button" ng-click="openAdmin()">
             <md-icon md-svg-src="img/icons/ic_lock_24px.svg"></md-icon>
@@ -69,6 +80,9 @@
             </b>
           </div>
     </div>
+	<div ng-show="stateIsLoading">
+		<md-progress-linear md-mode="indeterminate"></md-progress-linear>
+	</div>
   <!-- For Content :Start -->
 	<div ui-view></div>
   <!-- For Content :End -->

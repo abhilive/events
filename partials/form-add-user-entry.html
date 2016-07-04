@@ -1,13 +1,12 @@
 <md-bottom-sheet class="md-list md-has-header" ng-cloak>
-  <md-content md-theme="docs-dark" layout-padding>
-      <div>
+  <md-content layout-padding>
         <form name="registerForm">
-          <div class="layout-gt-sm-row">
-            <md-input-container>
+          <div layout-gt-sm="row">
+            <md-input-container class="md-block" flex-gt-sm>
               <label>Name</label>
               <input ng-model="participant.name" required>
             </md-input-container>
-            <md-input-container>
+            <md-input-container class="md-block" flex-gt-sm>
               <label>Email</label>
               <input ng-model="participant.email" name="email" type="email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@smartdatainc.net$/" required>
             </md-input-container>
@@ -20,7 +19,7 @@
                 </md-select>
             </md-input-container>
             <md-input-container class="md-block" flex-gt-sm>
-              <label>Select Activity</label>
+              <label>Performance Type</label>
               <md-select ng-model="participant.activity" required>
                 <md-option ng-repeat="act in activities" value="{{act.id}}">
                   {{act.name}}
@@ -28,6 +27,16 @@
               </md-select>
             </md-input-container>
           </div>
+		  <div layout-gt-sm="row">
+				<md-input-container class="md-block" flex-gt-sm>
+					<label>What do you like to perform ?</label>
+					<input md-maxlength="200" required name="description" ng-model="participant.description">
+					<div ng-messages="registerForm.description.$error">
+					  <div ng-message="required">This is required.</div>
+					  <div ng-message="md-maxlength">The description has to be less than 200 characters long.</div>
+					</div>
+				</md-input-container>
+		  </div>
          <div class="dialog-demo-content" layout="row" layout-wrap layout-margin layout-align="center">
             <md-button class="md-primary md-raised" ng-click="showUserConfirm($event)" ng-disabled="registerForm.$invalid">
               Consider Me Please
@@ -42,6 +51,5 @@
 		  <p>
 		  </p>
         </form>
-    </div>
   </md-content>
 </md-bottom-sheet>

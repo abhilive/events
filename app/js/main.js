@@ -2,7 +2,7 @@
  * Must include the dependency on 'ngMaterial'
  */
 var app = angular.module('SclApp', ['ngMaterial', 'ngAnimate', 'angular-flexslider', 'ngMessages', 'ui.router', 'material.svgAssetsCache']);
-//#DCDCC1
+
 app.config( function($mdThemingProvider) {  
     /*$mdThemingProvider.theme('default')
           .primaryPalette('blue')
@@ -49,6 +49,11 @@ app.run(function ($rootScope, $state, loginModal, authenticationSvc) {
           });
     }
     $rootScope.title = pageTitle;
+	$rootScope.stateLoading = true;
+  });
+  
+  $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams) {
+	$rootScope.stateLoading = false;
   });
 
 });
@@ -88,14 +93,32 @@ $urlRouterProvider.when('', '/');
        title: 'smartData Cultural League | Whats Hot'
       }
     })
-	 .state('showwhatshot.viewpics', {
+	.state('photosnvideos', {
+      url: '/photosnvideos',
+      templateUrl: "partials/photosnvideos.html",
+	  /*controller: "PhotosnvideosCtrl",*/
+      data: {
+       requireLogin: false,
+       title: 'smartData Cultural League | Photos & Videos'
+      }
+    })
+	.state('contactus', {
+      url: '/contactus',
+      templateUrl: "partials/contactus.html",
+	  controller: "ContactusCtrl",
+      data: {
+       requireLogin: false,
+       title: 'smartData Cultural League | Contact Us'
+      }
+    })
+	 .state('photosnvideos.viewpics', {
       url: '/viewpics/:location/:forEvent',
 		  templateUrl: "partials/participants/photos.html",
       controller: "PicsCtrl",
 		  /*controller: function($scope, $stateParams) {
           $scope.partId = $stateParams.forEvent;
 			    console.log($scope.partId);
-      },*/
+		},*/
 		  data: {
 			 requireLogin: false,
        title: 'smartData Cultural League | Participants Photos'
@@ -153,7 +176,7 @@ app.service('loginModal', function ($mdDialog, $rootScope) {
       });
 
       return instance.then(assignCurrentUser);
-  };
+	};
 
 });
 
@@ -206,7 +229,48 @@ app.controller('AppCtrl', function($scope, $rootScope, $state, $mdDialog, $mdBot
 
 }); // End Controller - AppCtrl
 
-app.controller('UserDashboardCtrl', function ($mdDialog, $state, $scope, $rootScope, Data) {
+app.controller('ContactusCtrl', function ($state, $scope, $rootScope, $mdDialog, Data) { 
+	var imagePath = 'images/pics/60.jpeg';
+	 $scope.todos = [
+      {
+        face : imagePath,
+        what: 'Brunch this weekend?',
+        who: 'Min Li Chan',
+        when: '3:08PM',
+        notes: " I'll be in your neighborhood doing errands"
+      },
+      {
+        face : imagePath,
+        what: 'Brunch this weekend?',
+        who: 'Min Li Chan',
+        when: '3:08PM',
+        notes: " I'll be in your neighborhood doing errands"
+      },
+      {
+        face : imagePath,
+        what: 'Brunch this weekend?',
+        who: 'Min Li Chan',
+        when: '3:08PM',
+        notes: " I'll be in your neighborhood doing errands"
+      },
+      {
+        face : imagePath,
+        what: 'Brunch this weekend?',
+        who: 'Min Li Chan',
+        when: '3:08PM',
+        notes: " I'll be in your neighborhood doing errands"
+      },
+      {
+        face : imagePath,
+        what: 'Brunch this weekend?',
+        who: 'Min Li Chan',
+        when: '3:08PM',
+        notes: " I'll be in your neighborhood doing errands"
+      },
+    ];
+});
+
+app.controller('UserDashboardCtrl', function ($state, $scope, $rootScope, $mdDialog, Data) {
   console.log('UserDashboardCtrl reporting for duty.');
 
   $scope.brloc = [
@@ -225,9 +289,9 @@ app.controller('UserDashboardCtrl', function ($mdDialog, $state, $scope, $rootSc
       $scope.groups = data.data;
   });
 
-  $scope.goToPerson = function(person, event) {
+  $scope.goToPerson = function(person, ev) {
     console.log(person);
-    $mdDialog.show({
+    /*$mdDialog.show({
       targetEvent: event,
       template:
         '<md-dialog>' +
@@ -238,38 +302,29 @@ app.controller('UserDashboardCtrl', function ($mdDialog, $state, $scope, $rootSc
         '    </md-button>' +
         '  </md-dialog-actions>' +
         '</md-dialog>',
-      controller: 'DialogController',
+      controller: DialogController,
       //onComplete: afterShowAnimation,
       locals: { personInfo: person }
-    });
-    /*$mdDialog.show(
-      $mdDialog.alert()
-        .title('Participant')
-        .textContent('Name ' + person.nm)
-        .ariaLabel('Person inspect demo')
-        .ok('Close')
-        .targetEvent(event)
-    );*/
-    /*$mdDialog.show({
-      controller: DialogController,
-      templateUrl: 'partials/paticipants/viewparticipant.html',
+    });*/
+    $mdDialog.show({
+      controller: ParticipantCtrl,
+      templateUrl: 'partials/participants/viewparticipant.html',
       parent: angular.element(document.body),
       targetEvent: ev,
-      clickOutsideToClose:true,
-      fullscreen: useFullScreen
+	  locals: { personInfo: person },
+      clickOutsideToClose:true
     })
     .then(function(answer) {
       $scope.status = 'You said the information was "' + answer + '".';
     }, function() {
       $scope.status = 'You cancelled the dialog.';
-    });*/
+    });
   };
 
 });
 
 app.controller('WhatshotCtrl', function ($mdDialog, $state, $scope, $rootScope, Data) {
 	console.log('WhatshotCtrl reporting for duty.');
-
 });
 
 app.controller('PicsCtrl', function ($mdDialog, $state, $stateParams, $scope, $rootScope, Data) {
@@ -284,8 +339,22 @@ app.controller('PicsCtrl', function ($mdDialog, $state, $stateParams, $scope, $r
   //};
 });
 
-app.controller('DialogController', function ($scope, $mdDialog) {
-  console.log('DialogController reporting for duty.');
+function ParticipantCtrl($scope, $mdDialog, personInfo, Data, $http) {
+	console.log(personInfo);
+	$scope.getParticipantInfo = function(){
+		console.log('getRequest');
+	};
+	$http.get("api/index.php/viewparticipant", {params:{Id:personInfo.id}})
+		.then(function (response) {
+		console.log(response.data);
+		$scope.participant = response.data.data;
+	});
+  //$scope.participant = function() {
+	//Data.get('participant',{ part_id:personInfo.id }).then(function(result){
+	//	console.log(result);
+        //$scope.participants = data.data;
+    //});
+  //}
   $scope.hide = function() {
     $mdDialog.hide();
   };
@@ -295,9 +364,9 @@ app.controller('DialogController', function ($scope, $mdDialog) {
   $scope.answer = function(answer) {
     $mdDialog.hide(answer);
   };
-});
+}
 
-/*function DialogController($scope, $mdDialog) {
+function DialogController($scope, $mdDialog) {
   $scope.hide = function() {
     $mdDialog.hide();
   };
@@ -307,7 +376,7 @@ app.controller('DialogController', function ($scope, $mdDialog) {
   $scope.answer = function(answer) {
     $mdDialog.hide(answer);
   };
-}*/
+}
 
 //Admin- Login Controller
 app.controller('LoginCtrl', function ($mdDialog, $state, $scope, $rootScope, authenticationSvc) {
