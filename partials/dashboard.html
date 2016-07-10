@@ -57,13 +57,18 @@
                 <md-subheader class="md-no-sticky md-warn">{{tab.ttl_pr}} Selected Entries (Max:20, Closing Date: 15-July-16) </md-subheader>
                 <md-list-item class="md-3-line" ng-repeat="person in tab.prts" ng-click="goToPerson(person, $event)" class="noright">
                   <!--<img alt="{{ person.nm }}" ng-src="{{ person.img }}" class="md-avatar" />-->
-					<md-button class="md-fab" aria-label="Eat cake">
-						<md-icon md-svg-icon="img/icons/ic_star_border_18px.svg" class="md-avatar" style="color: greenyellow;"></md-icon>
+					<md-button class="md-fab" aria-label="Like" ui-sref="viewparticipant({id: person.id})">
+						<md-icon md-svg-icon="img/icons/ic_thumb_up_24px.svg" style="color: greenyellow;"></md-icon>
 					</md-button>
 				  <div class="md-list-item-text" layout="column">
                     <h3>{{ person.nm | limitTo: 25 }}{{person.nm.length > 25 ? '...' : ''}}</h3>
                     <p>{{ person.lc }}</p>
                   </div>
+				  <div layout="column">
+					<md-chips>
+						<md-chip>12 Likes <md-icon md-svg-icon="img/icons/ic_thumb_up_24px.svg" style="color: green;"></md-icon></md-chip>
+					</md-chips>
+				  </div>
 					<div layout="column">
 						<md-chips>
 							<md-chip>{{person.st}}</md-chip>
@@ -100,16 +105,22 @@
             <!--<span class="md-subhead">Material</span>-->
           </md-card-header-text>
         </md-card-header>
-        <!--<md-card-title>
-          <md-card-title-text>
+       <md-card-title layout="column">
+          <!--<md-card-title-text>
             <span class="md-headline">Announcements</span>
             <span class="md-subhead">Medium</span>
-          </md-card-title-text>
-          <md-card-title-media>
-            <div class="md-media-md card-media"></div>
-          </md-card-title-media>
-        </md-card-title>-->
+          </md-card-title-text>-->
+			<md-card-title-media layout="row" layout-align="center center">
+				<div class="md-media-md card-media">
+					<img ng-src="img/people_choice_awards.jpg">
+				</div>
+			</md-card-title-media>
+			<md-card-actions layout="column" layout-align="start">
+				<md-button class="md-raised md-warn" ng-click="goToState('vote');">Vote</md-button>
+			</md-card-actions>
+        </md-card-title>
 		<md-card-content>
+		<md-divider></md-divider>
 		<md-card-actions layout="column" layout-align="start">
           <md-button class="md-raised" ng-click="goToState('notifications');">Semifinal Rules</md-button>
         </md-card-actions>

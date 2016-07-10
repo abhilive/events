@@ -8,6 +8,7 @@
 		private $group_table_name = "group_type";
 		private $location_table_name = "location";
 		private $status_table_name = "statuses";
+		private $user_table_name = "user";
 		// object properties 
 
 		private $_order = array();
@@ -47,6 +48,82 @@
 	                $response["message"] = "Data selected from database";
 	            }
 	            	
+                $response["data"] = $rows;
+                //$response["data"]["items"] = json_decode($rows["items"]);
+	        }catch(PDOException $e){
+	            $response["status"] = "error";
+	            $response["message"] = 'Select Failed: ' .$e->getMessage();
+	            $response["data"] = null;
+	        }
+	        return $response;
+		}
+		function searchEmails($email) {
+			try {
+			$query = "SELECT email FROM ".$this->user_table_name." WHERE email LIKE '%$email%'";
+			$stmt = $this->conn->prepare( $query );
+	            $stmt->execute();
+	            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+	            if(count($rows)<=0){
+	                $response["status"] = "warning";
+	                $response["message"] = "No data found.";
+	            }else{
+	                $response["status"] = "success";
+	                $response["message"] = "Data selected from database";
+	            }
+	            	
+                $response["data"] = $rows;
+                //$response["data"]["items"] = json_decode($rows["items"]);
+	        }catch(PDOException $e){
+	            $response["status"] = "error";
+	            $response["message"] = 'Select Failed: ' .$e->getMessage();
+	            $response["data"] = null;
+	        }
+	        return $response;
+		} //verifyuser
+		function verifyuser($email,$emp_id) {
+			try {
+			$query = "SELECT * FROM ".$this->user_table_name." WHERE email = '$email' AND emp_id='$emp_id'";
+			$stmt = $this->conn->prepare( $query );
+	            $stmt->execute();
+				$num = $stmt->rowCount();
+	            $rows = $stmt->fetch(PDO::FETCH_ASSOC);
+	            if($num==0){
+	                $response["status"] = "error";
+	                $response["message"] = "No Matches Found. Please contact HR.";
+	            }else{
+	                $response["status"] = "success";
+	                $response["message"] = "You'r a verified user. Please select you candidate from performance category.";
+	            }
+	            	
+                $response["data"] = $rows;
+                //$response["data"]["items"] = json_decode($rows["items"]);
+	        }catch(PDOException $e){
+	            $response["status"] = "error";
+	            $response["message"] = 'Select Failed: ' .$e->getMessage();
+	            $response["data"] = null;
+	        }
+	        return $response;
+		}
+		
+		function getparticipants($group_id) {
+			try {
+			$query =  $query = "SELECT scl_pr.id AS id, scl_pr.name AS pname, scl_lc.name AS ln \n"
+				    . "FROM ".$this->participants_table_name." AS scl_pr \n"
+					. "JOIN ".$this->group_table_name." AS scl_gr ON scl_pr.group_id = scl_gr.id \n"
+				    . "JOIN ".$this->location_table_name." AS scl_lc ON scl_pr.location_id = scl_lc.id \n"
+					. "WHERE scl_gr.id = '$group_id'";
+			$stmt = $this->conn->prepare( $query );
+	            $stmt->execute();
+	            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+	            if(count($rows)<=0){
+	                $response["status"] = "error";
+	                $response["message"] = "No data found.";
+	            }else{
+	                $response["status"] = "success";
+	                $response["message"] = "Data Selected.";
+	            }
                 $response["data"] = $rows;
                 //$response["data"]["items"] = json_decode($rows["items"]);
 	        }catch(PDOException $e){

@@ -111,6 +111,16 @@ $urlRouterProvider.when('', '/');
        title: 'smartData Cultural League | Contact Us'
       }
     })
+	 .state('vote', {
+      url: '/peoplechoiceaward',
+		  templateUrl: "partials/peoplechoiceaward.html",
+		  controller: 'peopleChoiceAwardCtrl',
+		  controllerAs: 'ctrl',
+		  data: {
+			requireLogin: false,
+			title: 'smartData Cultural League | People Choice Awards'
+		  }
+    })
 	 .state('photosnvideos.viewpics', {
       url: '/viewpics/:location/:forEvent',
 		  templateUrl: "partials/participants/photos.html",
@@ -180,6 +190,67 @@ app.service('loginModal', function ($mdDialog, $rootScope) {
 
 });
 
+app.controller('peopleChoiceAwardCtrl', function($scope, $http, $timeout, $q, Data) {
+	console.log('PeopleChoiceAwardCtrl reporting for duty.');
+	var self = this;
+				// list of `state` value/display objects
+				self.selectedItem  = null;
+				self.searchText    = null;
+				self.querySearch   = querySearch;
+				// ******************************
+				// Internal methods
+				// ******************************
+				/**
+				 * Search for states... use $timeout to simulate
+				 * remote dataservice call.
+				 */
+				function querySearch (query) {
+					return $http.get("api/index.php/getemails", {params:{query_text: query}})
+					.then(function(result){
+					  return result.data.data;
+					});
+				}
+				/**
+				 * Build `states` list of key/value pairs
+				 */
+				self.newUser = newUser;
+				function newUser(qt) {
+					return $http.get("api/index.php/validateuser", {params:{query_text: query}})
+					.then(function(result){
+					  return result.data.data;
+					});
+				}
+				
+				self.validateUser = validateUser;
+				function validateUser(user_email,emp_id) {
+				//console.log(user_email.$modelValue);
+					return $http.get("api/index.php/verifyuser", {params:{email: user_email.$modelValue, emp_id: emp_id}})
+					.then(function(result){
+						if(result.data.status=='success') {
+							self.user = result.data.data;
+						} else {
+							self.user = false;
+						}
+						self.status = result.data.status;
+						self.message = result.data.message;
+					  return result.data.data;
+					});
+				}
+
+				// Retrieve all Activities
+				Data.get('activities').then(function(result){
+					self.perfgroup = result.data;
+				});				
+				
+				self.getParticipants = getParticipants;
+				function getParticipants() {
+					return $http.get("api/index.php/getparticipants", {params:{for_group: self.group_id}})
+					.then(function(result){
+					  self.participants = result.data.data;
+					});
+				}
+			});// END - People Choice Award Controller
+			
 // App Main Controller
 app.controller('AppCtrl', function($scope, $rootScope, $state, $mdDialog, $mdBottomSheet, $mdToast, Data, loginModal, authenticationSvc) {
     console.log('AppCtrl reporting for duty.');
