@@ -8,15 +8,16 @@
     </md-toolbar>
 	<md-content>
       <md-list flex>
-        <md-subheader class="md-no-sticky md-warn">5 Contact Persons</md-subheader>
-        <md-list-item class="md-3-line" ng-repeat="item in todos" ng-click="null">
+        <!--<md-subheader class="md-no-sticky md-warn">5 Contact Persons</md-subheader>-->
+        <md-list-item class="md-3-line" ng-repeat="item in mohalihr" ng-click="sendMailToHr(item.what,item.who)">
           <!--<img ng-src="img/icons/ic_phone_24px.svg" class="md-avatar" alt="{{item.who}}" />-->
-		  <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />
+		  <!--<img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />-->
 		  <!--<md-icon md-svg-icon="{{communication:phone}}" ng-class="md-avatar-icon"></md-icon>-->
+       <md-icon style="color:#3949AB;" class="email" md-svg-src="img/icons/ic_email_24px.svg" ng-class="md-avatar-icon"></md-icon>
           <div class="md-list-item-text" layout="column">
             <h3>{{ item.who }}</h3>
             <h4>{{ item.what }}</h4>
-            <p>{{ item.notes }}</p>
+            <!--<p>{{ item.notes }}</p>-->
           </div>
 		  <md-divider ng-if="!$last"></md-divider>
         </md-list-item>
@@ -31,13 +32,14 @@
     </md-toolbar>
 	<md-content>
       <md-list flex>
-        <md-subheader class="md-no-sticky md-warn">5 Contact Persons</md-subheader>
-        <md-list-item class="md-3-line" ng-repeat="item in todos" ng-click="null">
-          <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />
+        <!--<md-subheader class="md-no-sticky md-warn">5 Contact Persons</md-subheader>-->
+        <md-list-item class="md-3-line" ng-repeat="item in nagpurhr" ng-click="sendMailToHr(item.what,item.who)">
+          <!--<img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />-->
+          <md-icon style="color:#3949AB;" class="email" md-svg-src="img/icons/ic_email_24px.svg" ng-class="md-avatar-icon"></md-icon>
           <div class="md-list-item-text" layout="column">
             <h3>{{ item.who }}</h3>
             <h4>{{ item.what }}</h4>
-            <p>{{ item.notes }}</p>
+            <!--<p>{{ item.notes }}</p>-->
           </div>
 		  <md-divider ng-if="!$last"></md-divider>
         </md-list-item>
@@ -52,13 +54,14 @@
     </md-toolbar>
 	<md-content>
       <md-list flex>
-        <md-subheader class="md-no-sticky md-warn">5 Contact Persons</md-subheader>
-        <md-list-item class="md-3-line" ng-repeat="item in todos" ng-click="null">
-          <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />
+        <!--<md-subheader class="md-no-sticky md-warn">5 Contact Persons</md-subheader>-->
+        <md-list-item class="md-3-line" ng-repeat="item in dehradunhr" ng-click="sendMailToHr(item.what,item.who)">
+          <!--<img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />-->
+          <md-icon style="color:#3949AB;" class="email" md-svg-src="img/icons/ic_email_24px.svg" ng-class="md-avatar-icon"></md-icon>
           <div class="md-list-item-text" layout="column">
             <h3>{{ item.who }}</h3>
             <h4>{{ item.what }}</h4>
-            <p>{{ item.notes }}</p>
+            <!--<p>{{ item.notes }}</p>-->
           </div>
 		  <md-divider ng-if="!$last"></md-divider>
         </md-list-item>

@@ -84,7 +84,7 @@ $urlRouterProvider.when('', '/');
        title: 'smartData Cultural League | Notifications'
       }
     })
-	.state('showwhatshot', {
+	  .state('showwhatshot', {
       url: '/showwhatshot',
       templateUrl: "partials/showwhatshot.html",
 	  /*controller: "WhatshotCtrl",*/
@@ -93,7 +93,7 @@ $urlRouterProvider.when('', '/');
        title: 'smartData Cultural League | Whats Hot'
       }
     })
-	.state('photosnvideos', {
+	  .state('photosnvideos', {
       url: '/photosnvideos',
       templateUrl: "partials/photosnvideos.html",
 	  /*controller: "PhotosnvideosCtrl",*/
@@ -102,7 +102,7 @@ $urlRouterProvider.when('', '/');
        title: 'smartData Cultural League | Photos & Videos'
       }
     })
-	.state('contactus', {
+	  .state('contactus', {
       url: '/contactus',
       templateUrl: "partials/contactus.html",
 	  controller: "ContactusCtrl",
@@ -111,24 +111,14 @@ $urlRouterProvider.when('', '/');
        title: 'smartData Cultural League | Contact Us'
       }
     })
-	 .state('vote', {
-      url: '/peoplechoiceaward',
-		  templateUrl: "partials/peoplechoiceaward.html",
-		  controller: 'peopleChoiceAwardCtrl',
-		  controllerAs: 'ctrl',
-		  data: {
-			requireLogin: false,
-			title: 'smartData Cultural League | People Choice Awards'
-		  }
-    })
-	 .state('photosnvideos.viewpics', {
+	  .state('photosnvideos.viewpics', {
       url: '/viewpics/:location/:forEvent',
 		  templateUrl: "partials/participants/photos.html",
       controller: "PicsCtrl",
 		  /*controller: function($scope, $stateParams) {
           $scope.partId = $stateParams.forEvent;
 			    console.log($scope.partId);
-		},*/
+		  },*/
 		  data: {
 			 requireLogin: false,
        title: 'smartData Cultural League | Participants Photos'
@@ -171,86 +161,25 @@ app.service('loginModal', function ($mdDialog, $rootScope) {
 
   return function(ev) {
 
-      var instance = $mdDialog.show({
-        controller: DialogController,
-        templateUrl: 'partials/admin/admin.login.html',
-        parent: angular.element(document.body),
-        targetEvent: ev,
-        clickOutsideToClose:true,
-        fullscreen: true
-      })
-      .then(function(answer) {
-        console.log('success');
-      }, function() {
-        console.log('cancel');
-      });
+    var instance = $mdDialog.show({
+      controller: DialogController,
+      templateUrl: 'partials/admin/admin.login.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      clickOutsideToClose:true,
+      fullscreen: true
+    })
+    .then(function(answer) {
+      console.log('success');
+    }, function() {
+      console.log('cancel');
+    });
 
-      return instance.then(assignCurrentUser);
+    return instance.then(assignCurrentUser);
 	};
 
 });
 
-app.controller('peopleChoiceAwardCtrl', function($scope, $http, $timeout, $q, Data) {
-	console.log('PeopleChoiceAwardCtrl reporting for duty.');
-	var self = this;
-				// list of `state` value/display objects
-				self.selectedItem  = null;
-				self.searchText    = null;
-				self.querySearch   = querySearch;
-				// ******************************
-				// Internal methods
-				// ******************************
-				/**
-				 * Search for states... use $timeout to simulate
-				 * remote dataservice call.
-				 */
-				function querySearch (query) {
-					return $http.get("api/index.php/getemails", {params:{query_text: query}})
-					.then(function(result){
-					  return result.data.data;
-					});
-				}
-				/**
-				 * Build `states` list of key/value pairs
-				 */
-				self.newUser = newUser;
-				function newUser(qt) {
-					return $http.get("api/index.php/validateuser", {params:{query_text: query}})
-					.then(function(result){
-					  return result.data.data;
-					});
-				}
-				
-				self.validateUser = validateUser;
-				function validateUser(user_email,emp_id) {
-				//console.log(user_email.$modelValue);
-					return $http.get("api/index.php/verifyuser", {params:{email: user_email.$modelValue, emp_id: emp_id}})
-					.then(function(result){
-						if(result.data.status=='success') {
-							self.user = result.data.data;
-						} else {
-							self.user = false;
-						}
-						self.status = result.data.status;
-						self.message = result.data.message;
-					  return result.data.data;
-					});
-				}
-
-				// Retrieve all Activities
-				Data.get('activities').then(function(result){
-					self.perfgroup = result.data;
-				});				
-				
-				self.getParticipants = getParticipants;
-				function getParticipants() {
-					return $http.get("api/index.php/getparticipants", {params:{for_group: self.group_id}})
-					.then(function(result){
-					  self.participants = result.data.data;
-					});
-				}
-			});// END - People Choice Award Controller
-			
 // App Main Controller
 app.controller('AppCtrl', function($scope, $rootScope, $state, $mdDialog, $mdBottomSheet, $mdToast, Data, loginModal, authenticationSvc) {
     console.log('AppCtrl reporting for duty.');
@@ -302,43 +231,47 @@ app.controller('AppCtrl', function($scope, $rootScope, $state, $mdDialog, $mdBot
 
 app.controller('ContactusCtrl', function ($state, $scope, $rootScope, $mdDialog, Data) { 
 	var imagePath = 'images/pics/60.jpeg';
-	 $scope.todos = [
+	 $scope.mohalihr = [
       {
         face : imagePath,
-        what: 'Brunch this weekend?',
-        who: 'Min Li Chan',
+        what: 'davinder.kaur@smartdatainc.net',
+        who: 'Davinder Kaur',
         when: '3:08PM',
         notes: " I'll be in your neighborhood doing errands"
-      },
-      {
-        face : imagePath,
-        what: 'Brunch this weekend?',
-        who: 'Min Li Chan',
-        when: '3:08PM',
-        notes: " I'll be in your neighborhood doing errands"
-      },
-      {
-        face : imagePath,
-        what: 'Brunch this weekend?',
-        who: 'Min Li Chan',
-        when: '3:08PM',
-        notes: " I'll be in your neighborhood doing errands"
-      },
-      {
-        face : imagePath,
-        what: 'Brunch this weekend?',
-        who: 'Min Li Chan',
-        when: '3:08PM',
-        notes: " I'll be in your neighborhood doing errands"
-      },
-      {
-        face : imagePath,
-        what: 'Brunch this weekend?',
-        who: 'Min Li Chan',
-        when: '3:08PM',
-        notes: " I'll be in your neighborhood doing errands"
-      },
+      }
     ];
+    $scope.nagpurhr = [
+      {
+        face : imagePath,
+        what: 'deepti.gaddamwar@smartdatainc.net',
+        who: 'Deepti Gaddamwar',
+        when: '3:08PM',
+        notes: " I'll be in your neighborhood doing errands"
+      }
+    ];
+    $scope.dehradunhr = [
+      {
+        face : imagePath,
+        what: 'siddharthg@smartdatainc.net',
+        who: 'Siddharth Gupta',
+        when: '3:08PM',
+        notes: " I'll be in your neighborhood doing errands"
+      }
+    ];
+    /*
+    Ref Link1 : http://stackoverflow.com/questions/22925326/angularjs-mailto-not-sending-emails
+    Ref Link2 : http://stackoverflow.com/questions/5620324/mailto-with-html-body
+    */
+    $scope.sendMailToHr = function (email, name) {
+      var subject = 'Regarding SCL';
+      var body = name;
+      var formattedBody = name+ ",\n";
+      var link = "mailto:"+ email
+             + "?subject=" + escape(subject)
+             + "&body=Hello " + encodeURIComponent(formattedBody); 
+
+      window.location.href = link;
+    };
 });
 
 app.controller('UserDashboardCtrl', function ($state, $scope, $rootScope, $mdDialog, Data) {
@@ -579,6 +512,7 @@ app.controller('BottomSheetCtrlForEntry', function ($mdDialog, $mdToast, $mdBott
             .cancel('Cancel');
       $mdDialog.show(confirm).then(function() {
         //console.log($scope.user);
+        $scope.participant.status = '2';
         Data.put("participants/add", $scope.participant)
             .then(function(result){
               if(result.status==='success') {
