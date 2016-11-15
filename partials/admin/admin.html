@@ -1,13 +1,25 @@
-   <md-content layout="column">
-    <md-toolbar>
+    <!--<md-toolbar>
       <div class="md-toolbar-tools">
-        <div>
-			<md-button ng-click="goToState('admin.dashboard');" class="md-icon-button" aria-label="Dashboard">
+        <div>-->
+			<!--<md-button ng-click="goToState('admin.dashboard');" class="md-icon-button" aria-label="Dashboard">
 				<md-icon md-svg-icon="img/icons/ic_dashboard_24px.svg"></md-icon>
-			</md-button>
-		</div>
-        <span flex></span>
-        <div>
+				<md-tooltip>Admin Dashboard</md-tooltip>
+			</md-button>-->
+			<md-nav-bar class="md-primary" md-selected-nav-item="dashboard" nav-bar-aria-label="navigation links">
+		    	<md-nav-item md-nav-sref="admin.dashboard" name="dashboard">Dashboard</md-nav-item>
+		    	<md-nav-item md-nav-sref="admin.userentries" name="userentries">Users</md-nav-item>
+		    	<md-nav-item md-nav-sref="admin.wildcardentries" name="wildcardentries" ng-disabled="true">Wildcard Entries</md-nav-item>
+		    	<!--<md-nav-item md-nav-sref="admin.feedbackentries" name="feedbackentries" ng-disabled="true">Feedback Entries</md-nav-item>-->
+		      	<!-- these require actual routing with ui-router or ng-route, so they won't work in the demo
+		      	<md-nav-item md-nav-sref="app.page4" name="page4">Page Four</md-nav-item>
+		      	<md-nav-item md-nav-href="#page5" name="page5">Page Five</md-nav-item>
+		      	-->
+		      	<span flex></span>
+		      	<md-nav-item md-nav-click="logout();" name="adminlogout">Logout</md-nav-item>
+		    </md-nav-bar>
+		<!--</div>-->
+        <!--<span flex></span>-->
+        <!--<div>
           <span flex></span>
 			<md-menu>
 				<md-button class="md-icon-button" aria-label="More" ng-click="$mdOpenMenu($event)">
@@ -19,11 +31,9 @@
 				</md-menu-item>
 			  </md-menu-content>
 			</md-menu>
-        </div>
-      </div>
-    </md-toolbar>
-  </md-content>  
-
+        </div>-->
+      <!--</div>
+    </md-toolbar>-->
   <!-- For Content :Start -->
   <div ui-view></div>
   <!-- For Content :End -->

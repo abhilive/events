@@ -36,24 +36,21 @@ app.run(function ($rootScope, $state, loginModal, authenticationSvc) {
     if (requireLogin && !authenticationSvc.isAuthenticated()) {
         event.preventDefault();
 	      //$state.go('admin.login');
-	      console.log('Login Modal');
+	      //console.log('Login Modal');
         loginModal()
           .then(function () {
-            console.log(toState.name);
-            console.log('1');
             return $state.go(toState.name, toParams);
           })
           .catch(function () {
-            console.log('2');
             return $state.go('index');
           });
     }
     $rootScope.title = pageTitle;
-	$rootScope.stateLoading = true;
+	  $rootScope.stateIsLoading = true;
   });
   
   $rootScope.$on('$stateChangeSuccess', function (event, toState, toParams) {
-	$rootScope.stateLoading = false;
+	  $rootScope.stateIsLoading = false;
   });
 
 });
@@ -61,8 +58,7 @@ app.run(function ($rootScope, $state, loginModal, authenticationSvc) {
 
 app.config(function($stateProvider, $urlRouterProvider) {
 
-	// the known route, with missing '/' - let's create alias
-$urlRouterProvider.when('', '/');
+  $urlRouterProvider.when('', '/');
   // For any unmatched url, redirect to /state1
   $urlRouterProvider.otherwise("/404");
   
@@ -84,34 +80,44 @@ $urlRouterProvider.when('', '/');
        title: 'smartData Cultural League | Notifications'
       }
     })
-	  .state('showwhatshot', {
+	.state('showwhatshot', {
       url: '/showwhatshot',
       templateUrl: "partials/showwhatshot.html",
-	  /*controller: "WhatshotCtrl",*/
+	    /*controller: "WhatshotCtrl",*/
       data: {
        requireLogin: false,
        title: 'smartData Cultural League | Whats Hot'
       }
     })
-	  .state('photosnvideos', {
+	.state('photosnvideos', {
       url: '/photosnvideos',
       templateUrl: "partials/photosnvideos.html",
-	  /*controller: "PhotosnvideosCtrl",*/
+	    /*controller: "PhotosnvideosCtrl",*/
       data: {
        requireLogin: false,
        title: 'smartData Cultural League | Photos & Videos'
       }
     })
-	  .state('contactus', {
+	 .state('contactus', {
       url: '/contactus',
       templateUrl: "partials/contactus.html",
-	  controller: "ContactusCtrl",
+	    controller: "ContactusCtrl",
       data: {
        requireLogin: false,
        title: 'smartData Cultural League | Contact Us'
       }
     })
-	  .state('photosnvideos.viewpics', {
+    .state('vote', {
+      url: '/peoplechoiceaward',
+      templateUrl: "partials/peoplechoiceaward.html",
+      controller: 'peopleChoiceAwardCtrl',
+      controllerAs: 'ctrl',
+      data: {
+      requireLogin: false,
+      title: 'smartData Cultural League | People Choice Awards'
+      }
+    })
+	 .state('photosnvideos.viewpics', {
       url: '/viewpics/:location/:forEvent',
 		  templateUrl: "partials/participants/photos.html",
       controller: "PicsCtrl",
@@ -143,6 +149,13 @@ $urlRouterProvider.when('', '/');
 		url: '/login',
 	    templateUrl: "partials/login.html",
     })
+  .state('admin.userentries', {
+    url: '/admin/userentries',
+    templateUrl: "partials/admin/admin.userentries.html",
+    data: {
+      title: 'smartData Cultural League | Admin Dashboard | User Entries'
+        },
+    })
 	.state('admin.dashboard', {
 		url: '/admin/dashboard',
 		templateUrl: "partials/admin/admin.dashboard.html",
@@ -152,7 +165,7 @@ $urlRouterProvider.when('', '/');
     })
 });
 
-app.service('loginModal', function ($mdDialog, $rootScope) {
+app.service('loginModal', function ($mdDialog, $rootScope, $state, authenticationSvc) {
 
   function assignCurrentUser (user) {
     $rootScope.currentUser = user;
@@ -160,33 +173,57 @@ app.service('loginModal', function ($mdDialog, $rootScope) {
   }
 
   return function(ev) {
+      var instance = $mdDialog.show({
+        controller: function($scope, $mdDialog, $window, $state, authenticationSvc) {
+            $scope.cancel = function () {
+              $mdDialog.cancel();
+            };
 
-    var instance = $mdDialog.show({
-      controller: DialogController,
-      templateUrl: 'partials/admin/admin.login.html',
-      parent: angular.element(document.body),
-      targetEvent: ev,
-      clickOutsideToClose:true,
-      fullscreen: true
-    })
-    .then(function(answer) {
-      console.log('success');
-    }, function() {
-      console.log('cancel');
-    });
-
-    return instance.then(assignCurrentUser);
+            $scope.confirm = function (email, password) {
+              authenticationSvc.login(email, password).then(function (result) {
+                  if (result.status==='success') {
+                      $mdDialog.cancel();
+                      $state.go('admin.dashboard');
+                      /*Uncomment below if you want to open admin in new tab
+                      Ref Lnk: http://stackoverflow.com/questions/23516289/angularjs-state-open-link-in-new-tab*/
+                      /*var url = $state.href('admin.dashboard');
+                      $window.open(url,'_blank');*/
+                  } else {
+                      $scope.email = $scope.password = '';
+                      $rootScope.status = result.message;
+                  }
+              }, function (error) {
+                  $window.alert("Invalid credentials");
+                  $mdDialog.cancel();
+                  //console.log(error);
+              });
+            };
+        },
+        //scope: $scope.$new(), // Get the parent controller scope // https://github.com/angular/material/issues/1531
+        templateUrl: 'partials/admin/admin.login.html',
+        parent: angular.element(document.body),
+        targetEvent: ev,
+        clickOutsideToClose: true,
+        fullscreen: true
+      })
+      .then(function(adminuser) {
+        /*console.log(adminuser);*/
+      }, function() {
+        //console.log('cancel');
+      });
+      return instance.then(assignCurrentUser);
 	};
 
 });
 
 // App Main Controller
 app.controller('AppCtrl', function($scope, $rootScope, $state, $mdDialog, $mdBottomSheet, $mdToast, Data, loginModal, authenticationSvc) {
-    console.log('AppCtrl reporting for duty.');
+  
+  console.log('AppCtrl reporting for duty.');
 
-    $scope.openAdmin = function(ev){
-      loginModal();
-    };
+  $scope.openAdmin = function(ev){
+    loginModal();
+  };
 
   //To show toast messages
   $scope.showSimpleToast = function(message) {
@@ -199,14 +236,8 @@ app.controller('AppCtrl', function($scope, $rootScope, $state, $mdDialog, $mdBot
   };
   //Transisition to state
   $scope.goToState = function(stateName) {
-      console.log(stateName);
+      //console.log(stateName);
       $state.go(stateName);
-  }
-  //Get All Participants Listings
-  $scope.showEntries = function() {
-      Data.get('participants').then(function(data){
-        $scope.participants = data.data;
-      });
   }
   
   $scope.logout = function() {
@@ -221,17 +252,130 @@ app.controller('AppCtrl', function($scope, $rootScope, $state, $mdDialog, $mdBot
   $scope.openBoxForUserEntry = function() {
     $mdBottomSheet.show({
       templateUrl: 'partials/form-add-user-entry.html',
-      controller: 'BottomSheetCtrlForEntry'
-    }).then(function(clickedItem) {
+      controller: 'BottomSheetCtrlForEntry',
+      scope: $scope.$new(), // Get the parent controller scope // https://github.com/angular/material/issues/1531
+    }).then(function(response) {
       console.log('test');
+    });
+  };
+
+  //For feedback form
+  $scope.showFeedbackPupup = function(ev) {
+    $mdDialog.show({
+      controller: 'FeedbackController',
+      templateUrl: 'partials/feedback.tmpl.html',
+      parent: angular.element(document.body),
+      targetEvent: ev,
+      clickOutsideToClose:true,
+      fullscreen: true
+    })
+    .then(function(feedback) { //Resolved Promise
+      Data.put("feedback/add", feedback)
+          .then(function(result){
+            if(result.status==='success') {
+              $scope.showSimpleToast('Thanks for your feedback.');
+            } else {
+              $scope.showSimpleToast('Error Occured:'+result.message);
+            }    
+      });
+      //$scope.status = 'You said the information was "' + answer + '".';
+    }, function() { //Reject Promise
+      //console.log('reject')
+      //$scope.status = 'You cancelled the dialog.';
     });
   };
 
 }); // End Controller - AppCtrl
 
+app.controller('peopleChoiceAwardCtrl', function($scope, $http, $timeout, $q, Data) {
+  console.log('PeopleChoiceAwardCtrl reporting for duty.');
+      
+      var self = this;
+      self.selectedItem  = null;
+      self.searchText    = null;
+      self.querySearch   = querySearch;
+      // ******************************
+      // Internal methods
+      // ******************************
+      /**
+       * Search for states... use $timeout to simulate
+       * remote dataservice call.
+       */
+      function querySearch (query) {
+        return Data.get('getemails/'+query).then(function(result){
+            return result.data;
+        });
+      }
+      
+      self.validateUser = validateUser;
+      function validateUser(user_email,emp_id) {
+        return Data.get('verifyuser/'+user_email.$modelValue+'/'+emp_id).then(function(result){
+            if(result.status=='success') {
+              self.user = result.data;
+            } else {
+              self.user = false;
+            }
+            self.status = result.status;
+            self.message = result.message;
+            return result;
+        });
+      }
+
+      // Retrieve all Activities
+      Data.get('activities').then(function(result){
+        self.perfgroup = result.data;
+      });       
+      
+      self.getParticipants = getParticipants;
+      function getParticipants() {
+        return Data.get('getparticipants/'+self.group_id).then(function(result){
+          self.part_id = undefined; //reset participant drop-down
+          self.participants = result.data;
+        });
+      }
+      //Main Function to cast vote
+      self.castvote = castvote;
+      function castvote() {
+        Data.post('castvote',{ group_id: self.group_id, part_id: self.part_id }).then(function(response){
+            /*console.log(response);*/
+            if(response.status=='success') {
+              //reset all fields - Upper Form
+              /*self.searchText = null;
+              $scope.emp_id = undefined;*/
+              //app.copy({},searchForm);
+              //reset form fields - Lower Form
+              self.group_id = undefined;
+              self.part_id = undefined;
+              // Hide forms & status Message
+              self.status = self.message = false;
+              self.votingStatus = true;
+            }
+          //$scope.prod.imagePaths = data.data;
+        });
+      }
+    });// END - People Choice Award Controller
+
+app.controller('FeedbackController', function ($mdDialog, $mdToast, $scope, Data) {
+    console.log('FeedbackController reporting for duty.');
+
+    $scope.brloc = [
+        { id: 1, name: 'Nagpur' },
+        { id: 2, name: 'Mohali' },
+        { id: 3, name: 'Dehradun' }
+    ];
+
+    $scope.confirm = function(feedback) {
+      $mdDialog.hide(feedback);
+    };
+
+    $scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+});
+
 app.controller('ContactusCtrl', function ($state, $scope, $rootScope, $mdDialog, Data) { 
-	var imagePath = 'images/pics/60.jpeg';
-	 $scope.mohalihr = [
+  var imagePath = 'images/pics/60.jpeg';
+   $scope.mohalihr = [
       {
         face : imagePath,
         what: 'davinder.kaur@smartdatainc.net',
@@ -294,35 +438,26 @@ app.controller('UserDashboardCtrl', function ($state, $scope, $rootScope, $mdDia
   });
 
   $scope.goToPerson = function(person, ev) {
-    console.log(person);
-    /*$mdDialog.show({
-      targetEvent: event,
-      template:
-        '<md-dialog>' +
-        '  <md-dialog-content>{{ personInfo.nm }}!</md-dialog-content>' +
-        '  <md-dialog-actions>' +
-        '    <md-button ng-click="closeDialog()" class="md-primary">' +
-        '      Close Greeting' +
-        '    </md-button>' +
-        '  </md-dialog-actions>' +
-        '</md-dialog>',
-      controller: DialogController,
-      //onComplete: afterShowAnimation,
-      locals: { personInfo: person }
-    });*/
     $mdDialog.show({
-      controller: ParticipantCtrl,
+      controller: function($scope, $mdDialog, personInfo) {
+        Data.get('viewparticipant/'+personInfo.id).then(function(data){
+            $scope.participant = data.data;
+        });
+        $scope.hide = function() {
+          $mdDialog.hide();
+        };
+      },
       templateUrl: 'partials/participants/viewparticipant.html',
       parent: angular.element(document.body),
       targetEvent: ev,
-	  locals: { personInfo: person },
-      clickOutsideToClose:true
-    })
-    .then(function(answer) {
-      $scope.status = 'You said the information was "' + answer + '".';
-    }, function() {
-      $scope.status = 'You cancelled the dialog.';
-    });
+  	  locals: { personInfo: person },
+        clickOutsideToClose:true
+      })
+      .then(function(answer) {
+        $scope.status = 'You said the information was "' + answer + '".';
+      }, function() {
+        $scope.status = 'You cancelled the dialog.';
+      });
   };
 
 });
@@ -335,40 +470,12 @@ app.controller('PicsCtrl', function ($mdDialog, $state, $stateParams, $scope, $r
   console.log('PicsCtrl reporting for duty.');
 
   $scope.prod = {imagePaths: []};
-  //$scope.prod = function() {
-      Data.put('getpics',{ location: $stateParams.location, forEvent: $stateParams.forEvent }).then(function(data){
-        //console.log(data.data);
-        $scope.prod.imagePaths = data.data;
-      });
-  //};
-});
 
-function ParticipantCtrl($scope, $mdDialog, personInfo, Data, $http) {
-	console.log(personInfo);
-	$scope.getParticipantInfo = function(){
-		console.log('getRequest');
-	};
-	$http.get("api/index.php/viewparticipant", {params:{Id:personInfo.id}})
-		.then(function (response) {
-		console.log(response.data);
-		$scope.participant = response.data.data;
-	});
-  //$scope.participant = function() {
-	//Data.get('participant',{ part_id:personInfo.id }).then(function(result){
-	//	console.log(result);
-        //$scope.participants = data.data;
-    //});
-  //}
-  $scope.hide = function() {
-    $mdDialog.hide();
-  };
-  $scope.cancel = function() {
-    $mdDialog.cancel();
-  };
-  $scope.answer = function(answer) {
-    $mdDialog.hide(answer);
-  };
-}
+  Data.post('getpics',{ location: $stateParams.location, forEvent: $stateParams.forEvent }).then(function(data){
+    $scope.prod.imagePaths = data.data;
+  });
+
+});
 
 function DialogController($scope, $mdDialog) {
   $scope.hide = function() {
@@ -383,7 +490,7 @@ function DialogController($scope, $mdDialog) {
 }
 
 //Admin- Login Controller
-app.controller('LoginCtrl', function ($mdDialog, $state, $scope, $rootScope, authenticationSvc) {
+app.controller('LoginCtrl', function ($mdDialog, $state, $scope, $rootScope, $window, authenticationSvc) {
 
   console.log('LoginCtrl reporting for duty.');
 
@@ -402,35 +509,24 @@ app.controller('LoginCtrl', function ($mdDialog, $state, $scope, $rootScope, aut
         }
     }, function (error) {
         $window.alert("Invalid credentials");
+        $mdDialog.cancel();
         console.log(error);
     });
   };
 
 });
 
-app.controller('ListCtrl', function($scope, $mdDialog, Data) {
-
-    Data.get('participants').then(function(data){
-        $scope.participants = data.data;
-    });
-
-    $scope.doSecondaryAction = function(event) {
-        $mdDialog.show(
-          $mdDialog.alert()
-            .title('Secondary Action')
-            .textContent('Secondary actions can be used for one click actions')
-            .ariaLabel('Secondary click demo')
-            .ok('Neat!')
-            .targetEvent(event)
-        );
-    };
-
-});
-
-app.controller('DashboardCtrl', function ($scope, $rootScope, $mdDialog, $mdBottomSheet, Data) {
+/*All admin controllers*/
+/*For Dashboard page*/
+app.controller('DashboardCtrl', function ($scope, $rootScope, $mdDialog, $mdBottomSheet, Data, authenticationSvc) {
     console.log('DashboardCtrl reporting for duty.');
-
     // Retrieve all Performers
+    var self = this;
+    self.showEntries = function() {
+        Data.get('participants').then(function(data){
+          $scope.participants = data.data;
+        });
+    }
 
     $scope.deleteEntry = function (ev,entry) {
         var confirm = $mdDialog.confirm()
@@ -441,10 +537,9 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $mdDialog, $mdBott
           .ok('Please do it!')
           .cancel('Cancel');
       $mdDialog.show(confirm).then(function() {
-        console.log(entry);
-        Data.delete("participants/"+entry.id).then(function(result){
-            console.log(result);
-            $scope.participants = _.without($scope.participants, _.findWhere($scope.participants, {id:entry.id}));
+        Data.delete("participant/"+entry.id).then(function(result){
+            //$scope.participants = _.without($scope.participants, _.findWhere($scope.participants, {id:entry.id}));
+            self.showEntries();
         });
         $scope.showSimpleToast('Entry has been deleted.');
         $scope.status = 'You decided to get rid of your debt.';
@@ -461,28 +556,165 @@ app.controller('DashboardCtrl', function ($scope, $rootScope, $mdDialog, $mdBott
           $scope.alert = clickedItem['name'] + ' clicked!';
       });
     };*/
-
+    /*Open box for admin entry*/
     $scope.openBoxForAdminEntry = function() {
       $mdBottomSheet.show({
-        templateUrl: 'partials/form-add-admin-entry.html',
+        templateUrl: 'partials/admin/form-add-admin-entry.html',
         controller: 'BottomSheetCtrlForEntry'
       }).then(function(clickedItem) {
         console.log('test');
       });
     };
 
+    $scope.editEntry = function(person, ev) {
+      //console.log(person);
+      $mdDialog.show({
+        controller: 'EditParticipantCtrl',
+        templateUrl: 'partials/admin/editparticipant.html',
+        parent: angular.element(document.body),
+        scope: $scope.$new(), // Get the parent controller scope // https://github.com/angular/material/issues/1531
+        targetEvent: ev,
+      locals: { personInfo: person },
+        clickOutsideToClose:true
+      })
+      .then(function(answer) {
+        //$scope.status = 'You said the information was "' + answer + '".';
+        //console.log('success');
+      }, function() {
+        //$scope.status = 'You cancelled the dialog.';
+        //console.log('dialog cancelled');
+        self.showEntries();
+      });
+    };
 });
 
-app.controller('BottomSheetCtrlForGroup', function ($location, $scope, $rootScope, Data, authenticationSvc) {
-  // Retrieve all Performers
+app.controller('UserEntriesCtrl', function ($scope, $rootScope, $mdDialog, $mdBottomSheet, $window, Data, authenticationSvc) {
+    console.log('UserEntriesCtrl reporting for duty.');
+    // Retrieve all Performers
+    var access_token = JSON.parse($window.sessionStorage["userInfo"]).accessToken;
+
+    var self = this;
+    self.showEntries = function() {
+        Data.post('users', { accessToken: access_token }).then(function(data){
+          $scope.users = data.data;
+        });
+    }
+    self.deleteEntry = function (ev,entry) {
+        var confirm = $mdDialog.confirm()
+          .title('Would you really like to delete this entry?')
+          .textContent("This action can't be undone. All choices of this user will be removed.")
+          .ariaLabel('Lucky day')
+          .targetEvent(ev)
+          .ok('Please do it!')
+          .cancel('Cancel');
+      $mdDialog.show(confirm).then(function() {
+        Data.delete("user/"+entry.id+"/"+access_token).then(function(result){
+            self.showEntries();
+        });
+        $scope.showSimpleToast('User is deleted.');
+        //$scope.status = 'You decided to get rid of your debt.';
+      }, function() {
+        //$scope.status = 'You decided to keep your debt.';
+      });
+    };
+    /*Open box for admin entry*/
+    self.openBoxForUserEntry = function() {
+      $mdBottomSheet.show({
+        templateUrl: 'partials/admin/form-admin-add-user-entry.html',
+        controller: 'BottomSheetCtrlForUserEntry',
+        scope: $scope.$new(), // Get the parent controller scope // https://github.com/angular/material/issues/1531
+      }).then(function(clickedItem) {
+        self.showEntries();
+      });
+    };
+    /*Open for Edit Entry - Not In Use*/
+    /*self.editEntry = function(person, ev) {
+      //console.log(person);
+      $mdDialog.show({
+        controller: 'EditParticipantCtrl',
+        templateUrl: 'partials/admin/editparticipant.html',
+        parent: angular.element(document.body),
+        scope: $scope.$new(), // Get the parent controller scope // https://github.com/angular/material/issues/1531
+        targetEvent: ev,
+      locals: { personInfo: person },
+        clickOutsideToClose:true
+      })
+      .then(function(answer) {
+        $scope.status = 'You said the information was "' + answer + '".';
+      }, function() {
+        $scope.status = 'You cancelled the dialog.';
+      });
+    };*/
+});
+
+app.controller('EditParticipantCtrl', function ($location, $scope, $rootScope, $mdDialog, $mdToast, Data, personInfo) {
+    //console.log(personInfo.id);
+
+    Data.get('getparticipant/'+personInfo.id).then(function(data){
+        $scope.participant = data.data;
+    });
+
+    $scope.brloc = [
+        { id: 1, name: 'Nagpur' },
+        { id: 2, name: 'Mohali' },
+        { id: 3, name: 'Dehradun' }
+    ];
     Data.get('activities').then(function(data){
         $scope.activities = data.data;
     });
+
+    Data.get('statuses').then(function(data){
+        $scope.statuses = data.data;
+    });
+
+    $scope.cancel = function() {
+      $mdDialog.cancel();
+    };
+
+    $scope.updateParticipant = function() {
+        //console.log($scope.participant);
+        Data.put("participant/update", $scope.participant)
+            .then(function(result){
+              if(result.status==='success') {
+                  $mdDialog.cancel();
+                  $scope.showSimpleToast('Information Updated.');
+              } else {
+                  $scope.showSimpleToast('Error Occured:'+result.message);
+              }    
+        });
+    }
+});
+/*Not In Use : Groups are fixed*/
+/*app.controller('BottomSheetCtrlForGroup', function ($location, $scope, $rootScope, Data, authenticationSvc) {
+    Data.get('activities').then(function(data){
+        $scope.activities = data.data;
+    });
+});*/
+
+app.controller('BottomSheetCtrlForUserEntry', function ($mdBottomSheet, $scope, $window, Data, authenticationSvc) {
+  console.log('BottomSheetCtrlForUserEntry reporting for duty.');
+
+    var access_token = JSON.parse($window.sessionStorage["userInfo"]).accessToken;
+    var self = this;
+    self.showAdminUserConfirm = function(ev) {
+        //console.log(access_token);
+        self.user.accessToken = access_token;
+        Data.put("user/add", self.user)
+            .then(function(result){
+              if(result.status==='success') {
+                  $scope.showSimpleToast('Entry added successfully.');
+              } else {
+                  $scope.showSimpleToast('Error Occured:'+result.message);
+              }    
+        });
+        $mdBottomSheet.hide();
+    };
 });
 
-app.controller('BottomSheetCtrlForEntry', function ($mdDialog, $mdToast, $mdBottomSheet, $location, $scope, $rootScope, Data, authenticationSvc) {
+app.controller('BottomSheetCtrlForEntry', function ($mdDialog, $mdBottomSheet, $scope, Data) {
   console.log('BottomSheetCtrlForEntry reporting for duty.');
-  $scope.brloc = [
+    //Retrieve all locations
+    $scope.brloc = [
         { id: 1, name: 'Nagpur' },
         { id: 2, name: 'Mohali' },
         { id: 3, name: 'Dehradun' }
@@ -493,15 +725,6 @@ app.controller('BottomSheetCtrlForEntry', function ($mdDialog, $mdToast, $mdBott
         $scope.activities = data.data;
     });
 
-    $scope.showSimpleToast = function(message) {
-      $mdToast.show(
-        $mdToast.simple()
-          .textContent(message)
-          .position('top right')
-          .hideDelay(3000)
-      );
-    };
-
     $scope.showUserConfirm = function(ev) {
       var confirm = $mdDialog.confirm()
             .title('Would you like to participate?')
@@ -510,9 +733,8 @@ app.controller('BottomSheetCtrlForEntry', function ($mdDialog, $mdToast, $mdBott
             .targetEvent(ev)
             .ok('Okay! I Agree')
             .cancel('Cancel');
-      $mdDialog.show(confirm).then(function() {
-        //console.log($scope.user);
-        $scope.participant.status = '2';
+      $mdDialog.show(confirm).then(function() { //Promise Resolved
+        $scope.participant.status = '2'; //For wildcard Entry
         Data.put("participants/add", $scope.participant)
             .then(function(result){
               if(result.status==='success') {
@@ -521,41 +743,10 @@ app.controller('BottomSheetCtrlForEntry', function ($mdDialog, $mdToast, $mdBott
                   $scope.showSimpleToast('Error Occured:'+result.message);
               }    
         });
-        /*$scope.showRegister = false;
-        $scope.user = $scope.user.name = $scope.user.email = {};*/
-        $mdBottomSheet.cancel();
-      }, function() {
-        //$scope.status = '';
-        //$scope.showRegister = false;
-        $scope.user = $scope.user.name = $scope.user.email = {};
+        $mdBottomSheet.hide();
+      }, function() { //Promise reject
+
       });
     };
 
-    $scope.showAdminConfirm = function(ev) {
-      var confirm = $mdDialog.confirm()
-            .title('Are you sure to consider this entry for mega event?')
-            .textContent('This entry is only for semi finals.')
-            .ariaLabel('Lucky day')
-            .targetEvent(ev)
-            .ok('Yes! Consider this Entry')
-            .cancel('Cancel');
-      $mdDialog.show(confirm).then(function() {
-        Data.put("participants/add", $scope.participant)
-            .then(function(result){
-                if(result.status==='success') {
-                    $scope.showSimpleToast('Entry is confirmed for semifinals.');
-                    $scope.showEntries();
-                } else {
-                    $scope.showSimpleToast('Error Occured:'+result.message);
-                }    
-        });
-        /*$scope.showRegister = false;
-        $scope.participant = $scope.user.name = $scope.user.email = {};*/
-        $mdBottomSheet.cancel();
-      }, function() {
-        //$scope.status = '';
-        //$scope.showRegister = false;
-        $scope.user = $scope.user.name = $scope.user.email = {};
-      });
-    };
 });

@@ -1,0 +1,25 @@
+<md-bottom-sheet class="md-list md-has-header" ng-controller="BottomSheetCtrlForUserEntry as bottomSheetCtrlForUserEntry" ng-cloak>
+  <md-content layout-padding>
+    <form name="addUserForm">
+      <div layout="row" layout-wrap layout-margin layout-align="center">
+        <md-input-container>
+          <label>Name</label>
+          <input ng-model="bottomSheetCtrlForUserEntry.user.name" required>
+        </md-input-container>
+        <md-input-container>
+          <label>Employee Id</label>
+          <input ng-model="bottomSheetCtrlForUserEntry.user.emp_id" required>
+        </md-input-container>
+        <md-input-container>
+          <label>Email</label>
+          <input ng-model="bottomSheetCtrlForUserEntry.user.email" name="email" type="email" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@smartdatainc.net$/" required>
+        </md-input-container>
+      </div>
+      <div class="dialog-demo-content" layout="row" layout-wrap layout-margin layout-align="center">
+        <md-button class="md-primary md-raised" ng-click="bottomSheetCtrlForUserEntry.showAdminUserConfirm($event)" ng-disabled="addUserForm.$invalid">
+          Add This Entry
+        </md-button>
+      </div>
+    </form>
+  </md-content>
+</md-bottom-sheet>

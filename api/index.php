@@ -5,17 +5,20 @@ include_once 'objects/participants.php';
 include_once 'objects/picnvideos.php';
 include_once 'objects/user.php';
 
-$configuration = [
-    'settings' => [
-        'displayErrorDetails' => true,
-    ],
-];
-$c = new \Slim\Container($configuration);
 
-use \Slim\Http\Request;
-use \Slim\Http\Response;
+$app = new \Slim\Slim(array(
+    'debug' => true
+));
 
-$app = new \Slim\App($c);
+/*$app->uuid = function ($user) {
+    return $user;
+};*/
+$app->myClosure = $app->container->protect(function ($user) {});
+
+// For content type json to array : PUT & POST Request
+/* Ref Link : http://help.slimframework.com/discussions/questions/393-interpret-json-data-with-in-app-put
+*/
+//$app->add(new \Slim\Middleware\ContentTypes());
 
 $dbHelper = new dbHelper();
 $db = $dbHelper->getConnection();
@@ -30,197 +33,251 @@ update(table name, column names as associative array, where clause as associativ
 delete(table name, where clause as array)
 */
 
-$app->get('/', function (Request $req,  Response $res, $args = []) {
+$app->get('/', function () {
     return $res->withStatus(400)->write('Bad Request');
 });
 
-$app->get('/groups',  function (Request $req,  Response $res, $args = []) {
+$app->get('/groups',  function () {
     global $db;
     $participants = new Participants($db);
-    // query orders
 
     $response = $participants->readAllGroups();
-    return $res->withStatus(200, 'OK')
-             ->withHeader('Content-Type', 'application/json')
-             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+    echoResponse(200, $response);
 });
 
-$app->get('/activities',  function (Request $req,  Response $res, $args = []) {
+$app->get('/activities',  function () {
     global $db;
     $participants = new Participants($db);
-    // query orders
 
     $response = $participants->readAllActivities();
-    return $res->withStatus(200, 'OK')
-             ->withHeader('Content-Type', 'application/json')
-             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+    echoResponse(200, $response);
 });
 
-$app->get('/participants',  function (Request $req,  Response $res, $args = []) {
+$app->get('/statuses',  function () {
     global $db;
     $participants = new Participants($db);
-    // query orders
 
-    $response = $participants->readAll();
-    return $res->withStatus(200, 'OK')
-             ->withHeader('Content-Type', 'application/json')
-             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+    $response = $participants->readAllStatuses();
+    echoResponse(200, $response);
 });
 
-$app->get('/viewparticipant',  function (Request $req,  Response $res, $args = []) {
+/*For Voting Functionality*/
+$app->get('/getemails/:query_text',  function ($query_text) use ($app) {
     global $db;
     $participants = new Participants($db);
-    // query orders
-	$params = $req->getQueryParams();
-    $response = $participants->load($params['Id']);
-    return $res->withStatus(200, 'OK')
-             ->withHeader('Content-Type', 'application/json')
-             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+
+    $response = $participants->searchEmails($query_text);
+    echoResponse(200, $response);
 });
 
-$app->get('/getemails',  function (Request $req,  Response $res, $args = []) {
+$app->get('/verifyuser/:email/:emp_id',  function ($email, $emp_id) use ($app) {
     global $db;
     $participants = new Participants($db);
-    // query orders
-	$params = $req->getQueryParams();
-    $response = $participants->searchEmails($params['query_text']);
-    return $res->withStatus(200, 'OK')
-             ->withHeader('Content-Type', 'application/json')
-             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+    //$app->user = $db->getUserName($api_key);
+    $response = $participants->verifyuser($email, $emp_id);
+    if($response["data"]) {
+        //$app->user = json_encode($response["data"]);
+        session_start();
+        $_SESSION["verified_user"] = $response["data"];
+        //$app->container->set('foobar', function() { return 'myuser'; } );
+    }
+    echoResponse(200, $response);
 });
 
-$app->get('/verifyuser',  function (Request $req,  Response $res, $args = []) {
+$app->get('/getparticipants/:for_group',  function ($for_group) use ($app) {
     global $db;
     $participants = new Participants($db);
-    // query orders
-	$params = $req->getQueryParams();
-    $response = $participants->verifyuser($params['email'],$params['emp_id']);
-    return $res->withStatus(200, 'OK')
-             ->withHeader('Content-Type', 'application/json')
-             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+
+    $response = $participants->getparticipants($for_group);
+    echoResponse(200, $response);
 });
 
-$app->get('/getparticipants',  function (Request $req,  Response $res, $args = []) {
+$app->post('/castvote',  function () use ($app) {
+    global $db, $user;
+    $participants = new Participants($db);
+
+    $params = json_decode($app->request()->getBody());
+    session_start();
+    if(isset($_SESSION["verified_user"])) {
+        $user = $_SESSION["verified_user"]; //Get User from session
+        unset($_SESSION["verified_user"]); // Unset session after getting user data
+        $params->email = $user['email'];
+        $params->emp_id = $user['emp_id'];
+    }
+    $mandatory = array('group_id','part_id','email','emp_id');
+    $response = $participants->castvote($params, $mandatory);
+    echoResponse(200, $response);
+});
+/*End Of Code*/
+
+$app->get('/viewparticipant/:id',  function ($id) use ($app) {
     global $db;
     $participants = new Participants($db);
-    // query orders
-	$params = $req->getQueryParams();
-    $response = $participants->getparticipants($params['for_group']);
-    return $res->withStatus(200, 'OK')
-             ->withHeader('Content-Type', 'application/json')
-             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+
+    $response = $participants->load($id);
+    echoResponse(200, $response);
 });
 
-// Orders
-$app->get('/orders', function() {
+$app->put('/participants/add',  function () use ($app) { 
     global $db;
-    // initialize object
-    $order = new Order($db);
-    // query orders
-    $data = $order->readAll();
-    echoResponse(200, $data);
+    $participants = new Participants($db);
+
+    $params = json_decode($app->request()->getBody());
+
+    $mandatory = array('name','location','activity','description','email','status');
+
+    $response = $participants->add($params, $mandatory);
+
+    echoResponse(200, $response);
 });
 
-// Export-Orders
-$app->post('/login',  function (Request $req,  Response $res, $args = []) {
+$app->put('/feedback/add',  function () use ($app) { 
+    global $db;
+    $participants = new Participants($db);
+
+    $params = json_decode($app->request()->getBody());
+
+    $mandatory = array('name','location','email','description');
+
+    $response = $participants->addFeedback($params, $mandatory);
+
+    echoResponse(200, $response);
+});
+
+$app->post('/login',  function () use ($app) {
 
     global $db;
     $user = new User($db);
-    $response = $user->login($req->getParams());
 
-    return $res->withStatus(200, 'OK')
-             ->withHeader('Content-Type', 'application/json')
-             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+    $params = json_decode($app->request->getBody());
+    $mandatory = array('password','username');
+
+    $response = $user->login($params, $mandatory);
+
+    echoResponse(200, $response);
 });
 
-$app->post('/logout',  function (Request $req,  Response $res, $args = []) {
+$app->post('/users',  function () use ($app) {
+
+    global $db;
+    $user = new User($db);
+
+    $params = json_decode($app->request->getBody());
+    $mandatory = array('accessToken');
+
+    $response = $user->getUsers($params, $mandatory);
+
+    echoResponse(200, $response);
+});
+
+$app->put('/user/add',  function () use ($app) { 
+    global $db;
+    $user = new User($db);
+
+    $params = json_decode($app->request()->getBody());
+
+    $mandatory = array('accessToken','email','emp_id','name');
+
+    $response = $user->addUser($params, $mandatory);
+
+    echoResponse(200, $response);
+});
+
+$app->delete('/user/:id/:access_token',  function ($id, $access_token) use ($app) { 
+    global $db;
+    $user = new User($db);
+
+    $params = new StdClass();
+    $params->accessToken = $access_token;
+    $params->userId = $id;
+
+    //$params = json_decode(array('accessToken'=>$access_token, 'userId'=>$id));
+
+    $mandatory = array('accessToken','userId');
+    $response = $user->deleteUser($params, $mandatory);
+
+    echoResponse(200, $response);
+});
+
+$app->post('/logout',  function () use ($app) {
 
     global $db;
     $user = new User($db);
     //$response = $user->logout();
 	$response = array('status'=>'success','message'=>'Logout Successful.');
-    return $res->withStatus(200, 'OK')
-             ->withHeader('Content-Type', 'application/json')
-             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+    echoResponse(200, $response);
 });
 
-$app->delete('/participants/{id}',  function (Request $req,  Response $res, $args = []) { 
-
+$app->delete('/participant/:id',  function ($id) use ($app) { 
     global $db;
     $participants = new Participants($db);
 
-    $response = $participants->delete("participants",  $args);
+    $response = $participants->delete("participants",  array('id'=>$id));
 
-    return $res->withStatus(200, 'OK')
-             ->withHeader('Content-Type', 'application/json')
-             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+    echoResponse(200, $response);
 });
 
-$app->put('/participants/add',  function (Request $req,  Response $res, $args = []) { 
-    print_r($req->getParams());die;
+$app->put('/participant/update',  function () use ($app) { 
     global $db;
     $participants = new Participants($db);
-    $response = $participants->add($req->getParams());
 
-    return $res->withStatus(200, 'OK')
-             ->withHeader('Content-Type', 'application/json')
-             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+    $params = json_decode($app->request()->getBody());
+
+    $mandatory = array('id', 'name', 'email', 'group_id', 'location_id', 'status_id');
+
+    $response = $participants->update($params, $mandatory);
+
+    echoResponse(200, $response);
 });
 
-$app->get('/dumpPics',  function (Request $req,  Response $res, $args = []) {
+$app->get('/getparticipant/:id', function ($id) use ($app) {
+    global $db;
+    $participants = new Participants($db);
+
+    $response = $participants->get($id);
+
+    echoResponse(200, $response);
+});
+
+$app->get('/dumpPics',  function () use ($app) {
     global $db;
     $picnvideos = new Picnvideos($db);
     // query orders
+    $params = $app->request->get();
+    $params = (object)  $params; //Covert array to object
+    $mandatory = array('location','forEvent');
 
-    $response = $picnvideos->dumpAll();
-    return $res->withStatus(200, 'OK')
-             ->withHeader('Content-Type', 'application/json')
-             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+    $response = $picnvideos->dumpAll($params, $mandatory);
+    echoResponse(200, $response);
 });
 
-$app->put('/getpics',  function (Request $req,  Response $res, $args = []) {
+$app->post('/getpics',  function () use ($app) {
     global $db;
     $picnvideos = new Picnvideos($db);
     // query orders
-    $response = $picnvideos->getAllPics($req->getParams());
-    return $res->withStatus(200, 'OK')
-             ->withHeader('Content-Type', 'application/json')
-             ->write(json_encode($response,JSON_NUMERIC_CHECK));
+    $params = json_decode($app->request->getBody());
+    $mandatory = array('location','forEvent');
+    
+    $response = $picnvideos->getAllPics($params, $mandatory);
+    echoResponse(200, $response);
 });
 
-// Products
-/*$app->get('/products', function() {
+/*For Admin User*/
+
+$app->get('/participants', function () use ($app) {
     global $db;
-    // initialize object
-    $product = new Product($db);
-    // query products
-    $data = $product->readAll();
-    echoResponse(200, $data);
-});*/
-/* Deprecated - Below Twos
-$app->post('/orders', function() use ($app) { 
-    $data = json_decode($app->request->getBody());
-    $mandatory = array('issuedTo','issuedBy');
-    global $db;
-    $order = new Order($db);
-    $rows = $order->create("orders", $data, $mandatory);
-    if($rows["status"]=="success")
-        $rows["message"] = "Information saved successfully.";
-    echoResponse(200, $rows);
+    $participants = new Participants($db);
+
+    $response = $participants->readAll();
+    echoResponse(200, $response);
 });
 
-// Export-Orders
-$app->post('/validateno', function() use ($app) {
-    global $db;
-    $recharge = new Recharge($db);
-    $data = json_decode($app->request->getBody());
-    //$mandatory = array('exportedBy');
-    // query orders to export
-    $rows = $recharge->validateNo($data);
-    if($rows["status"]=="success")
-        $rows["message"] = 'File generated successfully.';
-    echoResponse(200, $rows);
-});
-*/
+function echoResponse($status_code, $response) {
+    global $app;
+    $app->status($status_code);
+    $app->contentType('application/json');
+    echo json_encode($response,JSON_NUMERIC_CHECK);
+}
+
 $app->run();
 ?>

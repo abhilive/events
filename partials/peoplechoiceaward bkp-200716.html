@@ -1,0 +1,163 @@
+<md-content class="md-padding dashboard-top" >
+        <div layout="column" layout-gt-xs="row" >
+            <md-card flex flex-gt-xs="30" md-theme="dark-grey">
+                <md-card-title>
+				  <md-card-title-text>
+					<span class="md-headline">Group</span>
+					<span class="md-subhead">Top 5 Performers</span>
+				  </md-card-title-text>
+				</md-card-title>
+				<md-card-content layout="column" >
+				  <!--<md-list flex>
+					<md-subheader class="md-no-sticky">3 line item (with hover)</md-subheader>
+					<md-list-item class="md-3-line" ng-repeat="item in ctrl.todos" ng-click="null">
+					  <img ng-src="{{item.face}}?{{$index}}" class="md-avatar" alt="{{item.who}}" />
+					  <div class="md-list-item-text" layout="column">
+						<h3>{{ item.who }}</h3>
+						<h4>{{ item.what }}</h4>
+						<p>{{ item.notes }}</p>
+					  </div>
+				   </md-list-item>
+				   </md-list>-->
+				</md-card-content>
+            </md-card>
+            <md-card flex flex-gt-xs="30" md-theme="dark-grey">
+                <md-card-title>
+				  <md-card-title-text>
+					<span class="md-headline">Individual</span>
+					<span class="md-subhead">Top 5 Performers</span>
+				  </md-card-title-text>
+				</md-card-title>
+				<!---<md-card-actions layout="column" layout-align="start">
+				  <md-button class="md-accent md-raised md-hue-1" ng-click="showEntries();">Show Finalist</md-button>
+				</md-card-actions>-->
+            </md-card>
+			<md-card flex flex-gt-xs="30" md-theme="dark-grey">
+                <md-card-title>
+				  <md-card-title-text>
+					<span class="md-headline">Regional</span>
+					<span class="md-subhead">Top 5 Performers</span>
+				  </md-card-title-text>
+				</md-card-title>
+				<!--<md-card-actions layout="column" layout-align="start">
+				  <md-button class="md-raised" ng-disabled="true">Show Finalist</md-button>
+				</md-card-actions>-->
+            </md-card>
+        </div>
+    </md-content>
+	<!-- Upper Content : End -->
+	<!-- Voting Status : Start -->
+	<md-content ng-if="ctrl.votingStatus" class="md-padding peoplechoiceawarddashboard" layout-xs="column" layout="row">
+	    <div flex-xs flex-gt-xs="100" layout="column">
+	    	<md-card>
+			  <md-card-title>
+			    <md-card-title-text>
+			      <span class="md-headline">THANK YOU FOR YOUR VOTE!</span>
+			      <span class="md-subhead description">STAY TUNED TO SCL2016!</span>
+			    </md-card-title-text>
+			  </md-card-title>
+			</md-card>
+	    </div>
+    </md-content>
+	<!-- Voting Status : End -->
+	<!-- Lower Content : Start -->
+	<md-content class="md-padding peoplechoiceawarddashboard" layout-xs="column" layout="row">
+    <div flex-xs flex-gt-xs="100" layout="column">
+      <md-card>
+        <md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">VOTE FOR YOUR FAVORITE</span>
+            <span class="md-subhead">
+            	Voting will start after branch finals. Only smartians are allowed for voting.
+            </span>
+          </md-card-title-text>
+        </md-card-title>
+        <md-card-content>
+        	<div ng-if="ctrl.voteStatusMessage" layout="column" class="md-padding">
+			  	<div id="status">
+					<b layout="row" layout-align="center center" class="md-padding">
+					  {{ctrl.voteStatusMessage}}
+					</b>
+			  	</div>
+			</div>
+			<p>
+				You can vote up only one candidate from each performance category.
+			</p>
+			<form ng-submit="$event.preventDefault()" name="searchForm">
+			  <p>Please verify your identity first.</p>
+			  <div layout-gt-sm="row">
+				<md-autocomplete flex required
+					md-input-name="user_email"
+					md-input-minlength="5"
+					md-input-maxlength="50"
+					md-selected-item="ctrl.selectedItem"
+					md-search-text="ctrl.searchText"
+					md-items="item in ctrl.querySearch(ctrl.searchText)"
+					md-item-text="item.email"
+					md-floating-label="Your Email">
+				  <md-item-template>
+					<span md-highlight-text="ctrl.searchText">{{item.email}}</span>
+				  </md-item-template>
+				  <md-not-found>
+					  No email matching "{{ctrl.searchText}}" were found. 
+					  <a ng-click="ctrl.newState(ctrl.searchText)">Please contact to HR!</a>
+				  </md-not-found>
+				  <div ng-messages="searchForm.user_email.$error">
+					<div ng-message="required">You <b>must</b> have a valid email id.</div>
+					<div ng-message="minlength">Your entry is not long enough.</div>
+					<div ng-message="maxlength">Your entry is too long.</div>
+				  </div>
+				</md-autocomplete>
+				<md-input-container flex>
+				  <label>Employee Id</label>
+				  <input name="emp_id" ng-model="emp_id" type="text" required/>
+				  <div ng-messages="searchForm.emp_id.$error">
+					<div ng-message="required">You <b>must</b> have a valid Employee Id.</div>
+				  </div>
+				</md-input-container>
+			  </div>
+			  <div layout="row" layout-align="center">
+				<md-button type="submit" class="md-primary md-raised" ng-click="ctrl.validateUser(searchForm.user_email,emp_id)" ng-disabled="searchForm.$invalid">
+					Validate
+				</md-button>
+			  </div>
+			</form>
+			<!-- For status messages -->
+			<div ng-if="ctrl.message" layout="column" class="md-padding">
+			  	<div id="status">
+					<b layout="row" layout-align="center center" class="md-padding">
+					  {{ctrl.message}}
+					</b>
+			  	</div>
+			</div>
+			<md-divider></md-divider>
+			<form ng-submit="$event.preventDefault()" name="voteForm" ng-show="ctrl.status">
+			  	<p>Select Your Participant. You can select only one from every performance category.</p>
+			  	<div layout-gt-sm="row">
+					<md-input-container class="md-block" flex-gt-sm>
+					  <label>Performance Type</label>
+					  <md-select ng-model="ctrl.group_id" ng-change="ctrl.getParticipants()" required>
+						<md-option ng-repeat="group in ctrl.perfgroup" value="{{group.id}}">
+						  {{group.name}}
+						</md-option>
+					  </md-select>
+					</md-input-container>
+					<md-input-container class="md-block" flex-gt-sm>
+					  <label>Participants</label>
+					  <md-select ng-model="ctrl.part_id" ng-disabled="!ctrl.group_id" required>
+						<md-option ng-repeat="part in ctrl.participants" value="{{part.id}}">
+						  {{ part.pname | limitTo: 25 }}{{part.pname > 25 ? '...' : ''}} -  {{part.ln}}
+						</md-option>
+					  </md-select>
+					</md-input-container>
+			  	</div>
+			  <div layout="row" layout-align="center">
+				<md-button type="submit" class="md-primary md-raised" ng-click="ctrl.castvote(ctrl.group_id,ctrl.part_id)" ng-disabled="voteForm.$invalid">
+					Cast My Vote
+				</md-button>
+			  </div>
+			</form>
+        </md-card-content>
+      </md-card>
+	  </div>
+	</md-content><!--End : Card Lower Content -->

@@ -1,0 +1,61 @@
+<md-dialog aria-label="Feedback"  ng-cloak>
+  <form name="feedbackForm">
+    <md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Feedback</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>
+    <md-dialog-content>
+      <div class="md-dialog-content">
+      <div layout-gt-sm="row">
+        <md-input-container class="md-block" flex-gt-xs>
+          <!-- Use floating label instead of placeholder -->
+          <label>Name</label>
+          <md-icon md-svg-src="img/icons/ic_person_24px.svg" class="name"></md-icon>
+          <input ng-model="feedback.name"  md-maxlength="30" md-no-asterisk  type="text" ng-required="true">
+          <div ng-messages="feedbackForm.name.$error">
+            <div ng-message="required">This is required.</div>
+            <div ng-message="md-maxlength">The name has to be less than 30 characters long.</div>
+          </div>
+        </md-input-container>
+        <!--<md-input-container md-no-float class="md-block">
+          <md-icon md-svg-src="img/icons/ic_phone_24px.svg"></md-icon>
+          <input ng-model="user.phone" type="text" placeholder="Phone Number">
+        </md-input-container>-->
+        <md-input-container class="md-block" flex-gt-xs>
+          <!-- Use floating placeholder instead of label -->
+          <md-icon md-svg-src="img/icons/ic_email_24px.svg" class="email"></md-icon>
+          <input ng-model="feedback.email" name="email" placeholder="Email (required)" ng-pattern="/^[_a-z0-9]+(\.[_a-z0-9]+)*@smartdatainc.net$/" ng-required="true">
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-xs>
+          <label>Location</label>
+          <md-select ng-model="feedback.location">
+            <md-option ng-repeat="loc in brloc" value="{{loc.id}}">
+              {{loc.name}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+      </div>
+      <div layout-gt-sm="row">
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Description</label>
+          <input md-maxlength="100" name="description" ng-model="feedback.description" ng-required="true">
+          <div ng-messages="feedbackForm.description.$error">
+            <div ng-message="required">This is required.</div>
+            <div ng-message="md-maxlength">The description has to be less than 100 characters long.</div>
+          </div>
+        </md-input-container>
+      </div>
+      </div><!-- End Dialog Content -->
+    </md-dialog-content>
+    <md-dialog-actions layout="row">      
+      <md-button class="md-raised md-primary" ng-click="confirm(feedback)" ng-disabled="feedbackForm.$invalid" md-autofocus>
+        Confirm
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

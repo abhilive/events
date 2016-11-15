@@ -3,8 +3,8 @@
             <md-card class="events-card" flex flex-gt-xs="30">
                 <md-card-title>
 				  <md-card-title-text>
-					<span class="md-headline">Auditions (Finished)</span>
-					<span class="md-subhead">Only WildCard Entries Allowed</span>
+					<span class="md-headline">Auditions</span>
+					<span class="md-subhead">Finished</span>
 				  </md-card-title-text>
 				</md-card-title>
 				<!--<md-card-actions layout="column" layout-align="start">
@@ -15,7 +15,7 @@
                 <md-card-title>
 				  <md-card-title-text>
 					<span class="md-headline">Branch Semi Finals</span>
-					<span class="md-subhead">30th June (Ongoing)</span>
+					<span class="md-subhead">Finished</span>
 				  </md-card-title-text>
 				</md-card-title>
 				<!---<md-card-actions layout="column" layout-align="start">
@@ -26,7 +26,7 @@
                 <md-card-title>
 				  <md-card-title-text>
 					<span class="md-headline">Branch Finals</span>
-					<span class="md-subhead">14th July</span>
+					<span class="md-subhead">Finished</span>
 				  </md-card-title-text>
 				</md-card-title>
 				<!--<md-card-actions layout="column" layout-align="start">
@@ -37,7 +37,7 @@
 				<md-card-title>
 				  <md-card-title-text>
 					<span class="md-headline">National Finals</span>
-					<span class="md-subhead">10th August</span>
+					<span class="md-subhead">Only WildCard Entries Allowed</span>
 				  </md-card-title-text>
 				</md-card-title>
 				<!--<md-card-actions layout="column" layout-align="start">
@@ -54,21 +54,25 @@
                 label="{{tab.name}}">
           <div class="tab{{$index%4}}">
               <md-list class="list" flex>
-                <md-subheader class="md-no-sticky md-warn">{{tab.ttl_pr}} Selected Entries (Max:20, Closing Date: 15-July-16) </md-subheader>
+                <md-subheader class="md-no-sticky md-warn">{{tab.ttl_pr}} Selected Entries (Max:15, Closing Date: 29-July-16) </md-subheader>
                 <md-list-item class="md-3-line" ng-repeat="person in tab.prts" ng-click="goToPerson(person, $event)" class="noright">
                   <!--<img alt="{{ person.nm }}" ng-src="{{ person.img }}" class="md-avatar" />-->
-					<md-button class="md-fab" aria-label="Like" ui-sref="viewparticipant({id: person.id})">
-						<md-icon md-svg-icon="img/icons/ic_thumb_up_24px.svg" style="color: greenyellow;"></md-icon>
-					</md-button>
+						<div layout="column">
+              <!--<md-button class="md-fab" aria-label="Eat cake">-->
+                <md-icon md-svg-icon="img/icons/ic_star_border_18px.svg" class="md-avatar" style="color: #D92029;"></md-icon>
+              <!--</md-button>-->
+            </div>
 				  <div class="md-list-item-text" layout="column">
-                    <h3>{{ person.nm | limitTo: 25 }}{{person.nm.length > 25 ? '...' : ''}}</h3>
-                    <p>{{ person.lc }}</p>
-                  </div>
-				  <div layout="column">
-					<md-chips>
-						<md-chip>12 Likes <md-icon md-svg-icon="img/icons/ic_thumb_up_24px.svg" style="color: green;"></md-icon></md-chip>
-					</md-chips>
-				  </div>
+            <h3>{{ person.nm | limitTo: 25 }}{{person.nm.length > 25 ? '...' : ''}}</h3>
+            <p>{{ person.lc }}</p>
+          </div>
+          <div layout="column">
+            <md-chips>
+              <md-chip>
+                {{person.vc > 0 ? person.vc : 'No'}} Likes <md-icon md-svg-icon="img/icons/ic_thumb_up_24px.svg" style="color: green;"></md-icon>
+              </md-chip>
+            </md-chips>
+          </div>
 					<div layout="column">
 						<md-chips>
 							<md-chip>{{person.st}}</md-chip>
@@ -105,48 +109,60 @@
             <!--<span class="md-subhead">Material</span>-->
           </md-card-header-text>
         </md-card-header>
-       <md-card-title layout="column">
+        <!--<md-card-title>
+          <md-card-title-text>
+            <span class="md-headline">Announcements</span>
+            <span class="md-subhead">Medium</span>
+          </md-card-title-text>
+          <md-card-title-media>
+            <div class="md-media-md card-media"></div>
+          </md-card-title-media>
+        </md-card-title>-->
+        <md-card-title layout="column">
           <!--<md-card-title-text>
             <span class="md-headline">Announcements</span>
             <span class="md-subhead">Medium</span>
           </md-card-title-text>-->
-			<md-card-title-media layout="row" layout-align="center center">
-				<div class="md-media-md card-media">
-					<img ng-src="img/people_choice_awards.jpg">
-				</div>
-			</md-card-title-media>
-			<md-card-actions layout="column" layout-align="start">
-				<md-button class="md-raised md-warn" ng-click="goToState('vote');">VOTE TO YOUR FAVORITE</md-button>
-			</md-card-actions>
+          <md-card-title-media layout="row" layout-align="center center">
+            <div class="md-media-md card-media">
+              <img ng-src="img/people_choice_awards.jpg">
+            </div>
+          </md-card-title-media>
+          <md-card-actions layout="column" layout-align="start">
+            <md-button class="md-raised md-warn" ng-click="goToState('vote');">VOTE TO YOUR FAVORITE</md-button>
+          </md-card-actions>
         </md-card-title>
+        <md-divider></md-divider>
 		<md-card-content>
-		<md-divider></md-divider>
 		<md-card-actions layout="column" layout-align="start">
-          <md-button class="md-raised" ng-click="goToState('notifications');">Semifinal Rules</md-button>
+          <md-button class="md-primary md-raised" ng-click="showFeedbackPupup($event)">
+      Feedback
+    </md-button>
+          <md-button class="md-raised md-warn" ng-click="goToState('notifications');">Semifinal Rules</md-button>
         </md-card-actions>
 		<md-divider></md-divider>
 		<md-card-title>
           <md-card-title-text>
             <span class="md-headline">Jury Panel</span>
           </md-card-title-text>
+          <p>
+            Coming soon ...
+          </p>
         </md-card-title>
-          <p>
+          
+          <!--<p>
             The titles of Washed Out's breakthrough song and the first single from Paracosm share the
             two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
           </p>
           <p>
             The titles of Washed Out's breakthrough song and the first single from Paracosm share the
             two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
-          </p>
-          <p>
-            The titles of Washed Out's breakthrough song and the first single from Paracosm share the
-            two most important words in Ernest Greene's musical language: feel it. It's a simple request, as well...
-          </p>
+          </p>-->
         </md-card-content>
-        <md-card-actions layout="row" layout-align="end center">
+        <!--<md-card-actions layout="row" layout-align="end center">
           <md-button>Action 1</md-button>
           <md-button>Action 2</md-button>
-        </md-card-actions>
+        </md-card-actions>-->
       </md-card>
 	  </div>
     </md-content>

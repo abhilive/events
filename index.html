@@ -73,13 +73,13 @@
     </md-toolbar>
     </md-content>
 	<!-- For status messages -->
-    <div ng-if="status" layout="column" class="md-padding">
+    <!--<div ng-if="status" layout="column" class="md-padding">
           <div id="status">
             <b layout="row" layout-align="center center" class="md-padding">
               {{status}}
             </b>
           </div>
-    </div>
+    </div>-->
 	<div ng-show="stateIsLoading">
 		<md-progress-linear md-mode="indeterminate"></md-progress-linear>
 	</div>
@@ -98,11 +98,11 @@
   <!-- Application Content : End -->
   
   <!-- Angular Material requires Angular.js Libraries -->
-  <script src="app/js/jquery/2.1.1/jquery.min.js"></script>
+  <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
   <script src="app/js/angularJs/1.5.5/angular.min.js"></script>
   <script src="app/js/angularJs/1.5.5/angular-animate.min.js"></script>
   <script src="app/js/angularJs/1.5.5/angular-aria.min.js"></script>
-  <script src="app/js/flexslider/2.2.2/jquery.flexslider-min.js"></script>
+  <script src="//cdn.jsdelivr.net/flexslider/2.2.2/jquery.flexslider-min.js"></script>
   
 <!--<script src="../app/js/angularJs/1.5.5/angular-route.min.js"></script>-->
   <!-- We are not using ui-router -->
@@ -116,7 +116,7 @@
   <!-- Application bootstrap  -->
   <script src="app/js/main.js"></script>
   <script src="app/js/data.js"></script>
-  <script src="app/js/angular-flexslider.js"></script>
+    <script src="app/js/angular-flexslider.js"></script>
 </body>
 </html>
 

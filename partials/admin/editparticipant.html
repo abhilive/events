@@ -1,0 +1,62 @@
+<md-dialog aria-label="Participant Information" ng-cloak >
+  <form name="editParticipant" ng-submit="updateParticipant()">
+    <!--<md-toolbar>
+      <div class="md-toolbar-tools">
+        <h2>Participant {{participant.participant_name}}</h2>
+        <span flex></span>
+        <md-button class="md-icon-button" ng-click="cancel()">
+          <md-icon md-svg-src="img/icons/ic_close_24px.svg" aria-label="Close dialog"></md-icon>
+        </md-button>
+      </div>
+    </md-toolbar>-->
+    <md-dialog-content>
+      <div class="md-dialog-content">
+        <md-input-container>
+          <label>Name</label>
+          <input ng-model="participant.name">
+        </md-input-container>
+        <md-input-container>
+          <label>Email</label>
+          <input ng-model="participant.email" type="email">
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Description</label>
+          <input ng-model="participant.description">
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Performance Type</label>
+          <md-select ng-model="participant.group_id" required>
+            <md-option ng-repeat="act in activities" value="{{act.id}}">
+              {{act.name}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Location</label>
+          <md-select ng-model="participant.location_id" required>
+            <md-option ng-repeat="loc in brloc" value="{{loc.id}}">
+              {{loc.name}}
+            </md-option>
+          </md-select>
+        </md-input-container>
+        <md-input-container class="md-block" flex-gt-sm>
+          <label>Status</label>
+          <md-select ng-model="participant.status_id">
+            <md-option ng-repeat="status in statuses" value="{{status.id}}">
+              {{status.name}}
+            </md-option>
+          </md-select>
+        </md-input-container>        
+      </div>
+    </md-dialog-content>
+    <md-dialog-actions layout="row">
+      <md-button class="md-primary md-raised" type="submit" />
+        Update
+      </md-button>
+      <span flex></span>
+      <md-button ng-click="cancel()">
+        Close
+      </md-button>
+    </md-dialog-actions>
+  </form>
+</md-dialog>

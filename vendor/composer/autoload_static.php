@@ -4,56 +4,14 @@
 
 namespace Composer\Autoload;
 
-class ComposerStaticInit421ebcdd4fb307ee07446850499da019
+class ComposerStaticInit3b6f9d0bf3f6683cab79fe64278fb9a2
 {
-    public static $files = array (
-        '253c157292f75eb38082b5acb06f3f01' => __DIR__ . '/..' . '/nikic/fast-route/src/functions.php',
-    );
-
-    public static $prefixLengthsPsr4 = array (
+    public static $prefixesPsr0 = array (
         'S' => 
         array (
-            'Slim\\' => 5,
-        ),
-        'P' => 
-        array (
-            'Psr\\Http\\Message\\' => 17,
-        ),
-        'I' => 
-        array (
-            'Interop\\Container\\' => 18,
-        ),
-        'F' => 
-        array (
-            'FastRoute\\' => 10,
-        ),
-    );
-
-    public static $prefixDirsPsr4 = array (
-        'Slim\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/slim/slim/Slim',
-        ),
-        'Psr\\Http\\Message\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/psr/http-message/src',
-        ),
-        'Interop\\Container\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/container-interop/container-interop/src/Interop/Container',
-        ),
-        'FastRoute\\' => 
-        array (
-            0 => __DIR__ . '/..' . '/nikic/fast-route/src',
-        ),
-    );
-
-    public static $prefixesPsr0 = array (
-        'P' => 
-        array (
-            'Pimple' => 
+            'Slim' => 
             array (
-                0 => __DIR__ . '/..' . '/pimple/pimple/src',
+                0 => __DIR__ . '/..' . '/slim/slim',
             ),
         ),
     );
@@ -61,9 +19,7 @@ class ComposerStaticInit421ebcdd4fb307ee07446850499da019
     public static function getInitializer(ClassLoader $loader)
     {
         return \Closure::bind(function () use ($loader) {
-            $loader->prefixLengthsPsr4 = ComposerStaticInit421ebcdd4fb307ee07446850499da019::$prefixLengthsPsr4;
-            $loader->prefixDirsPsr4 = ComposerStaticInit421ebcdd4fb307ee07446850499da019::$prefixDirsPsr4;
-            $loader->prefixesPsr0 = ComposerStaticInit421ebcdd4fb307ee07446850499da019::$prefixesPsr0;
+            $loader->prefixesPsr0 = ComposerStaticInit3b6f9d0bf3f6683cab79fe64278fb9a2::$prefixesPsr0;
 
         }, null, ClassLoader::class);
     }

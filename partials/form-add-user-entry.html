@@ -18,26 +18,27 @@
                   </md-option>
                 </md-select>
             </md-input-container>
-            <md-input-container class="md-block" flex-gt-sm>
-              <label>Performance Type</label>
-              <md-select ng-model="participant.activity" required>
-                <md-option ng-repeat="act in activities" value="{{act.id}}">
-                  {{act.name}}
-                </md-option>
-              </md-select>
-            </md-input-container>
           </div>
 		  <div layout-gt-sm="row">
+        <md-input-container class="md-block" flex="30" flex-gt-sm="30">
+          <label>Performance Type</label>
+          <md-select ng-model="participant.activity" required>
+            <md-option ng-repeat="act in activities" value="{{act.id}}">
+              {{act.name}}
+            </md-option>
+          </md-select>
+        </md-input-container>
 				<md-input-container class="md-block" flex-gt-sm>
 					<label>What do you like to perform ?</label>
-					<input md-maxlength="200" required name="description" ng-model="participant.description">
+					<input md-maxlength="100" required name="description" ng-model="participant.description">
 					<div ng-messages="registerForm.description.$error">
 					  <div ng-message="required">This is required.</div>
-					  <div ng-message="md-maxlength">The description has to be less than 200 characters long.</div>
+					  <div ng-message="md-maxlength">The description has to be less than 100 characters long.</div>
 					</div>
 				</md-input-container>
 		  </div>
          <div class="dialog-demo-content" layout="row" layout-wrap layout-margin layout-align="center">
+            <!--<input type="hidden" ng-model="participant.status" name="status" ng-value="2" />--><!-- It' not working -->
             <md-button class="md-primary md-raised" ng-click="showUserConfirm($event)" ng-disabled="registerForm.$invalid">
               Consider Me Please
             </md-button>
@@ -48,8 +49,6 @@
           <p layout="row" layout-align="center center">
             Only smartData valid emailid's are allowed. For Ex: <code class="warn">ex@smartdatainc.net</code>
           </p>
-		  <p>
-		  </p>
         </form>
   </md-content>
 </md-bottom-sheet>

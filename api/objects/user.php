@@ -5,6 +5,9 @@
 		//private $table_prefix = ''; //Not In Use
 
 		private $user_table_name = "admin_user";
+		private $site_users_table_name = "user";
+		private $voting_table_name = "voting";
+		private $participants_table_name = "participants";
 		// object properties 
 
 		private $_order = array();
@@ -25,68 +28,58 @@
     	}
 
 		// read orders
-		function login($where) {
-			$data = array();
-			if(count($where)<=0){
-				$response["data"] = $data;
-	            $response["status"] = "warning";
-	            $response["message"] = "Select Failed: Argument missing";
-	        }else{
-	            try{
-	                $a = array();
-	                $w = "";
-	                foreach ($where as $key => $value) {
-	                    $w .= " and " .$key. " = :".$key;
-	                    $a[":".$key] = $value;
-	                }
-	                $stmt =  $this->conn->prepare("SELECT * FROM $this->user_table_name WHERE 1=1 ".$w); //removed  after WHERE
-	                //echo $stmt;die;
-	                $stmt->execute($a);
-	                //$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+		function login($columnsArray, $requiredColumnsArray) {
+			$this->verifyRequiredParams($columnsArray, $requiredColumnsArray);
+            try{
+                //print_r($columnsArray);die;
+                $query = "SELECT * FROM ". $this->user_table_name . " WHERE username=:username AND password=:password ";
+                //echo $columnsArray->username;die;
+                $stmt = $this->conn->prepare($query); //removed  after WHERE
 
-	                $affected_rows = $stmt->rowCount();
-	                if($affected_rows<=0){
-	                	$response["data"] = $data;
-	                    $response["status"] = "error";
-	                    $response["message"] = "Invalid Credentials";
-	                }else{
-	                	$data = array('access_token'=>'adminuser_login','userName'=>$where['username']);
-	                	$response["data"] = $data;
-	                    $response["status"] = "success";
-	                    $response["message"] = "Logged In Successful";
-	                }
-	            }catch(PDOException $e){
-	            	$response["data"] = $data;
-	                $response["status"] = "error";
-	                $response["message"] = 'Select Failed: ' .$e->getMessage();
-	            }
-	        }
+                // bind values
+		    	$stmt->bindParam(":username", $columnsArray->username);
+		    	$stmt->bindParam(":password", $columnsArray->password);
+
+                //var_dump($stmt);die;
+                $stmt->execute();
+                //$rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+                $affected_rows = $stmt->rowCount();
+                if($affected_rows<=0){
+                	$response["data"] = null;
+                    $response["status"] = "error";
+                    $response["message"] = "Invalid Credentials";
+                }else{
+                	$data = array('access_token'=>'adminuser_login','userName'=>$columnsArray->username);
+                	$response["data"] = $data;
+                    $response["status"] = "success";
+                    $response["message"] = "Logged In Successful";
+                }
+            }catch(PDOException $e){
+            	$response["data"] = null;
+                $response["status"] = "error";
+                $response["message"] = 'Select Failed: ' .$e->getMessage();
+            }
+
 	        return $response;
 		}
 
-		function readAll() {
-			try{
-		    // select all query
-	            $query = "SELECT scl_pr.id AS id, scl_pr.name AS participant_name, scl_gr.name AS group_name, scl_lc.name AS location \n"
-				    . "FROM ".$this->participants_table_name." AS scl_pr \n"
-				    . "JOIN ".$this->group_table_name." AS scl_gr ON scl_pr.group_id = scl_gr.id \n"
-				    . "JOIN ".$this->location_table_name." AS scl_lc ON scl_pr.location_id = scl_lc.id GROUP BY scl_pr.id ORDER BY id DESC\n"
-				    . "";
-				    //echo $query;die;
-	            $stmt = $this->conn->prepare( $query );
+		function getUsers($columnsArray, $requiredColumnsArray) {
+			$this->verifyRequiredParams($columnsArray, $requiredColumnsArray);
+			try {
+				$query = "SELECT * FROM ". $this->site_users_table_name . " GROUP BY id ASC ";
+				$stmt = $this->conn->prepare( $query );
 	            $stmt->execute();
 	            $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
 	            if(count($rows)<=0){
-	                $response["status"] = "warning";
+	                $response["status"] = "error";
 	                $response["message"] = "No data found.";
 	            }else{
 	                $response["status"] = "success";
-	                $response["message"] = "Data selected from database";
+	                $response["message"] = "Data Selected.";
 	            }
-	            	
                 $response["data"] = $rows;
-                //$response["data"]["items"] = json_decode($rows["items"]);
 	        }catch(PDOException $e){
 	            $response["status"] = "error";
 	            $response["message"] = 'Select Failed: ' .$e->getMessage();
@@ -95,75 +88,157 @@
 	        return $response;
 		}
 
-		// read All Group & participants
-		function readAllGroups() {
-			try{
-		    $response = '';
-    		$json_params = $this->generateJson(array('id'=>'scl_pr.id','name'=>'scl_pr.name','location'=>'scl_lc.name'),'participants');
-		    
-		    $query = "SELECT scl_gr.id, scl_gr.name, COUNT(scl_pr.id) as total_participants, ".$json_params." \n"
-		    		. "FROM ".$this->group_table_name." AS scl_gr \n"
-				    . "JOIN ".$this->participants_table_name." AS scl_pr ON scl_gr.id = scl_pr.group_id \n"
-				    . "JOIN ".$this->location_table_name." AS scl_lc ON scl_pr.location_id = scl_lc.id GROUP BY scl_gr.id ORDER BY name ASC\n"
-				    . "";
-			//echo $query;die;
-		    // prepare query statement
-		    $stmt = $this->conn->prepare( $query );
-		     
-		    // execute query
-		    $stmt->execute();
+		function addUser($columnsArray, $requiredColumnsArray) {
+			$this->verifyRequiredParams($columnsArray, $requiredColumnsArray);
+			try {
+				//var_dump($columnsArray);die;
+				$query = "INSERT INTO 
+		                " . $this->site_users_table_name . "
+			            SET 
+			                name=:name, email=:email, emp_id=:emp_id";
+				$stmt = $this->conn->prepare( $query );
 
-		    $num = $stmt->rowCount();
+				// bind values
+			    $stmt->bindParam(":name", $columnsArray->name);
+			    $stmt->bindParam(":email", $columnsArray->email);
+			    $stmt->bindParam(":emp_id", $columnsArray->emp_id);
 
-		    $rows = $stmt->fetchAll(PDO::FETCH_ASSOC);
-	        $result = array();
-			// check if more than 0 record found
-				if($num>0){
-			     
-			    $data = array();
-
-			    foreach ($rows as $_row) {
-			        $result[] = array(
-			        		'id' => $_row['id'],
-			        		'name' => $_row['name'],
-			        		'total_participants' => $_row['total_participants'],
-			        		'participants' => json_decode($_row['participants']) // decode json data getting for items
-			        	); 
-			    	} //End Foreach
-			    } // End IF
-
-			    if(count($rows)<=0){
-	                $response["status"] = "warning";
-	                $response["message"] = "No data found.";
-	            }else{
+	            if($stmt->execute()){
+	            	$affected_rows = $stmt->rowCount();
 	                $response["status"] = "success";
-	                $response["message"] = "Data selected from database";
+	            	$response["message"] = $affected_rows." row(s) updated to database";
+	            }else{
+	                $response["status"] = "error";
+	                $response["message"] = "No rows added.";
 	            }
-
-                $response["data"] = $result;
-                //$response["data"]["items"] = json_decode($rows["items"]);
 	        }catch(PDOException $e){
 	            $response["status"] = "error";
 	            $response["message"] = 'Select Failed: ' .$e->getMessage();
-	            $response["data"] = null;
 	        }
 	        return $response;
 		}
 
-		function generateJson($fields, $as) {
-			$str = "CONCAT('[',GROUP_CONCAT(CONCAT('{\"";
-			$cnt = count($fields);
-			$i = 0;
-			foreach ($fields as $k=>$v) {
-				$str.= $k . "\":','\"'," . $v;
+		function deleteUser($columnsArray, $requiredColumnsArray) {
+			$this->verifyRequiredParams($columnsArray, $requiredColumnsArray);
+			try {
+				//First update participants vote from participants table
+				//Step 1: Select Entry from voting table and check which participants are associated with
+				$userId = $columnsArray->userId;
+				$msg = '';
+				$flag_part_vote = $flag_voting_user_entry = true;
+				$query_select_voting_entry = "SELECT * FROM ".$this->voting_table_name." WHERE user_id='$userId'";
+	     		$stmt_select_voting_entry = $this->conn->prepare( $query_select_voting_entry );
 
-				if ($i != $cnt - 1) {
-					$str.= ",'\",\"";
-				}
-				$i++;
-			}
-			$str.= ",'\"}')),']') AS ".$as;
-			return $str;
+	            if($stmt_select_voting_entry->execute()){
+	            	$rows = $stmt_select_voting_entry->fetchAll(PDO::FETCH_ASSOC);
+	            	$selected_rows_cnt = $stmt_select_voting_entry->rowCount();
+
+	            	if($selected_rows_cnt>0) { //If user votes for any participant then reduce entry from participants table & delete records from voting table.
+	            		$cnt = 0;
+		            	foreach ($rows as $_row) {
+		            		$res_up_part_vc = $this->updateVotingUnderParticipantTable($_row["part_id"],'minusone');
+		            		if($res_up_part_vc['status']=='success') {
+		            			$cnt++;
+		            		} else {
+		            			$msg .= $res_up_part_vc['error'];
+		            		}
+		            	}
+		            	$msg = "Reduce voting count from participants table for ".$selected_rows_cnt." participants.";
+
+		            	if($selected_rows_cnt == $cnt) {
+		            		$query_delete_voting_entry = "DELETE FROM ".$this->voting_table_name." WHERE user_id='$userId'";
+		            		$stmt_delete_voting_entry = $this->conn->prepare( $query_delete_voting_entry );
+		            		if($stmt_delete_voting_entry->execute()){
+		            			$deleted_rows_cnt = $stmt_select_voting_entry->rowCount();
+		            			$msg .= "\n Deleted ".$deleted_rows_cnt." entires from voting table.";
+		            		}
+		            	} else {
+		            		$msg .= "\n Voting count mismatch under participants & voting table.";
+		            		$flag_part_vote = false;
+		            	}
+	            	} else {
+	            		$msg = "User didn't vote anyone.";
+	            	}
+	            	
+	            } else {
+	            	$msg .= $stmt_select_voting_entry->errorInfo();
+	            	$flag_voting_user_entry = false;
+	        	}
+	            //End Step 1.
+	            //Finally Delete entry from 'user' table.
+	            if(($flag_part_vote) && ($flag_voting_user_entry)) {
+	            	$query = "DELETE FROM 
+		                " . $this->site_users_table_name . "
+			            WHERE  
+			                id='$userId'"; //$userId
+					$stmt = $this->conn->prepare( $query );
+					if($stmt->execute()){
+		            	$affected_rows = $stmt->rowCount();
+		                $response["status"] = "success";
+		            	$response["message"] = $msg." \n Deleted ".$affected_rows." row(s) from user table.";
+		            }else{
+		                $response["status"] = "error";
+		                $response["message"] = "No rows deleted.";
+		            }
+	            } else {
+	            	$response["status"] = "error";
+		            $response["message"] = $msg;
+	            }
+	        }catch(PDOException $e){
+	            $response["status"] = "error";
+	            $response["message"] = 'Error Occured: ' .$e->getMessage();
+	        }
+	        return $response;
 		}
+
+		function updateVotingUnderParticipantTable($part_id, $action) {
+			if($action=='minusone') {
+				try {
+					$sel_query = "SELECT * FROM ".$this->participants_table_name." WHERE id='$part_id'";
+					$stmt = $this->conn->prepare( $sel_query );
+		            $stmt->execute();
+					$num = $stmt->rowCount();
+		            $rows = $stmt->fetch(PDO::FETCH_ASSOC);
+		            if($num==0){
+		                $response["status"] = "error";
+		                $response["message"] = "No Participant found for id.".$part_id;
+		            } else {
+		            	//echo $rows['vc'];die;
+		            	$new_cnt = $rows['vc']-1;
+		            	$up_query = "UPDATE ".$this->participants_table_name." SET vc='$new_cnt' WHERE id='$part_id'";
+						$stmt = $this->conn->prepare( $up_query );
+			            if($stmt->execute()) {
+			            	$num = $stmt->rowCount();
+			            	$response["status"] = "success";
+			                $response["message"] = $num." records updated successfully.";
+			            }
+		            }
+		        }catch(PDOException $e){
+		            $response["status"] = "exception";
+		            $response["message"] = 'Select Failed: ' .$e->getMessage();
+		        }
+		        return $response;
+			}
+		}
+
+		function verifyRequiredParams($inArray, $requiredColumns) {
+	        $error = false;
+	        $errorColumns = "";
+	        foreach ($requiredColumns as $field) {
+	        // strlen($inArray->$field);
+	            if (!isset($inArray->$field) || strlen(trim($inArray->$field)) <= 0) {
+	                $error = true;
+	                $errorColumns .= $field . ', ';
+	            }
+	        }
+
+	        if ($error) {
+	            $response = array();
+	            $response["status"] = "error";
+	            $response["message"] = 'Required field(s) ' . rtrim($errorColumns, ', ') . ' is missing or empty';
+	            echoResponse(200, $response);
+	            exit;
+	        }
+	    }
 
 	}
