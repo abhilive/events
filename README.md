@@ -21,3 +21,5 @@ Functionality Implemented :
 3. What's hot, Photos & Videos, Notifiaction, Contact-Us pages.
 4. Management Login. (u: admin, p: password)
 5. Admin Option - Add New Entry, Show Finalist, Delete Participant.
+
+DEMO : https://events-abhilive.c9users.io/
